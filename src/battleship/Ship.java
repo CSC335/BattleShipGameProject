@@ -1,13 +1,13 @@
 package battleship;
 
-public class Ships {
+public class Ship {
 
 	int size;
 	int[][] location;
 	int[][] hitLoc;
 	int hits;
 	
-	public static void Ships() {
+	public static void Ship() {
 		//ships constructor
 	}
 	
