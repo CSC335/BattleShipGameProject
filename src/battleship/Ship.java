@@ -1,23 +1,26 @@
 package battleship;
 
 public class Ship {
-
+	
 	int size;
-	int[][] location;
-	int[][] hitLoc;
-	int hits;
+	String type;
+	int [][] squares;
+	int notHit;
+	boolean sunk;
 	
-	public static void Ship() {
-		//ships constructor
+	public Ship(int s, String t) {
+		size = s;
+		type = t;
+		notHit = s;
+		squares = new int[size][2];
+		sunk = false;
 	}
 	
-	public static void ifHit(int[] hit) {
-		//test to see if the coordinate in hit will hit the ship
-		//if so change the hitLoc and hits 
-		
-	}
-	
-	public static void isSank() {
-		//check if the boat is sank
+	public void guess() {
+		notHit--;
+		if(notHit <= 0) {
+			sunk = true;
+		}
 	}
 }
+
