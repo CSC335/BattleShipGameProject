@@ -31,13 +31,14 @@ public class Square {
 			if(ship == null && guessed == true) {
 				//missed
 				return 'X';
-			}else if(ship != null && guessed == true) {
-				//hit
-				return 'H';
 			}else if(ship != null){
-				return 'S';
+				if(guessed) {
+					return Character.toLowerCase(ship.getID());
+				}else {
+					return ship.getID();
+				}
 			}else {
-				return 'O';
+				return '.';
 			}
 		}else {
 			if(ship == null && guessed == true) {
@@ -47,7 +48,7 @@ public class Square {
 				//hit
 				return 'H';
 			}else {
-				return 'O';
+				return '.';
 			}
 		}
 	}
