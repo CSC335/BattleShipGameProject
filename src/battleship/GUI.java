@@ -9,10 +9,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
@@ -30,16 +35,37 @@ public class GUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		// Set title "Battleship" style
-		titleLabel.setStyle("-fx-font-size: 24px;");
+		// Set title "Battleship" style		
+		titleLabel.setFont(Font.font("Impact", 40));
+		titleLabel.setTextFill(Color.TRANSPARENT);
 
+        // Create a linear gradient for the text color
+		titleLabel.setTextFill(Color.rgb(0, 76, 153));
+
+        // Apply effects like drop shadow and reflection
+		titleLabel.setEffect(new DropShadow());
+		titleLabel.setEffect(new Reflection());
+		
+		
 		// Create radio buttons for game mode selection
 		ToggleGroup gameModeGroup = new ToggleGroup();
 		aiRadioButton.setToggleGroup(gameModeGroup);
 		players2RadioButton.setToggleGroup(gameModeGroup);
+		aiRadioButton.setStyle("-fx-font-size: 16px;" +
+					"-fx-text-fill: rgb( 0, 0, 102);" +
+					"-fx-font-family: Roboto Slab");
+		players2RadioButton.setStyle("-fx-font-size: 16px;" +
+				"-fx-text-fill: rgb( 0, 0, 102);" +
+				"-fx-font-family: Roboto Slab");
 
 		// Create a button to start the game
-		Button startButton = new Button("Start");
+		Button startButton = new Button("S T A R T");
+		startButton.setStyle("-fx-background-color: rgb(0, 51, 102); " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 16px; " +
+                "-fx-pref-width: 120px; " +
+                "-fx-pref-height: 40px;" +
+                "-fx-font-family: Impact");
 		startButton.setOnAction(event -> {
 			if (aiRadioButton.isSelected()) {
 				// Start AI game
@@ -56,11 +82,11 @@ public class GUI extends Application {
 		});
 
 		// Create an HBox to hold the radio buttons
-		HBox radioBox = new HBox(10, aiRadioButton, players2RadioButton);
+		HBox radioBox = new HBox(35, aiRadioButton, players2RadioButton);
 		radioBox.setAlignment(Pos.CENTER);
 
 		// Create a VBox to hold all elements
-		VBox root = new VBox(20, titleLabel, radioBox, startButton);
+		VBox root = new VBox(60, titleLabel, radioBox, startButton);
 		root.setAlignment(Pos.CENTER);
 		root.setPadding(new Insets(50));
 
@@ -82,7 +108,7 @@ public class GUI extends Application {
         opponentField.setPrefHeight(400);
 		TextField playerField = new TextField();
 		playerField.setEditable(false); // Set to read-only
-		playerField.setPrefWidth(400); // Set preferred width
+		playerField.setPrefWidth(400);
 		playerField.setPrefHeight(400);
 
 		// Determine board labels based on isAI flag
@@ -94,9 +120,17 @@ public class GUI extends Application {
             leftLabel = new Label("Player1 Board");
             rightLabel = new Label("Player2 Board");
         }
+        
+        // Set left label font and color	
+        leftLabel.setFont(Font.font("Georgia", FontWeight.BOLD, 20));
+        leftLabel.setTextFill(Color.rgb(0, 51, 102));
+        
+        // Set right label font and color	
+        rightLabel.setFont(Font.font("Georgia", FontWeight.BOLD, 20));
+        rightLabel.setTextFill(Color.rgb(0, 51, 102));
 
         // Create HBox for left and right labels
-        HBox labelBox = new HBox(400, leftLabel, rightLabel);
+        HBox labelBox = new HBox(300, leftLabel, rightLabel);
         labelBox.setAlignment(Pos.CENTER);
 		
 		// Create input fields for x and y coordinates
@@ -104,7 +138,13 @@ public class GUI extends Application {
 		TextField yInput = new TextField();
 
 		// Create Guess button
-		Button guessButton = new Button("Guess");
+		Button guessButton = new Button("G u e s s");
+		guessButton.setStyle("-fx-background-color: rgb(0, 51, 102); " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 14px; " +
+                "-fx-pref-width: 80px; " +
+                "-fx-pref-height: 32px;" +
+                "-fx-font-family: Impact");
 		guessButton.setOnAction(event -> {
 			// Process the guess based on xInput and yInput values
 			int x = Integer.parseInt(xInput.getText());
