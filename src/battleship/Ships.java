@@ -19,7 +19,7 @@ public class Ships {
 	
 	public void update() {
 		if(shipObjs[0].isSunk() && shipObjs[1].isSunk() && shipObjs[2].isSunk() && 
-				shipObjs[3].isSunk() && shipObjs[0].isSunk()) {
+				shipObjs[3].isSunk() && shipObjs[4].isSunk()) {
 			allSunk = true;
 			board.gameOver();
 		}
