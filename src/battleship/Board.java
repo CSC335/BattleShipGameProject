@@ -4,6 +4,7 @@ public class Board {
 
 	Ships ships;
 	Square[][] squareBoard;
+	boolean[][] guessedBoard;
 	//if player board, player true
 	//if computer, false
 	boolean player;
@@ -13,18 +14,30 @@ public class Board {
 		//initialize board
 		ships = new Ships(this);
 		squareBoard = new Square[10][10];
+		guessedBoard = new boolean[10][10];
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
 				squareBoard[i][j] = new Square(i, j);
+				guessedBoard[i][j] = false;
 			}
 		}
 		player = p;
 		gameState = true;
 	}
 	
-	public void guess(int x, int y) {
+	public boolean guess(int x, int y) {
 		//player can make a move
-		squareBoard[x][y].guess();
+		if(!guessedBoard[x][y]) {
+			squareBoard[x][y].guess();
+			guessedBoard[x][y] = true;
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public void placeSq(int x, int y, Ship s) {
+		squareBoard[x][y].place(s);
 	}
 	
 	public boolean getState() {
@@ -69,6 +82,10 @@ public class Board {
 		for(int i = 7; i < 9; i++) {
 			squareBoard[0][i].place(currShip);
 		}
+	}
+	
+	public boolean[][] getGuessed(){
+		return guessedBoard;
 	}
 	
 }

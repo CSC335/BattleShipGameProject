@@ -2,7 +2,7 @@ package battleship;
 
 public class Ships {
 	
-	Ship[] shipObjs;
+	public Ship[] shipObjs;
 	boolean allSunk;
 	Board board;
 	

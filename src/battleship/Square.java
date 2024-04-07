@@ -1,5 +1,6 @@
 package battleship;
 
+//Represents a point on board
 public class Square {
 	
 	int x;

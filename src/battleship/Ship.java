@@ -35,5 +35,9 @@ public class Ship {
 	public char getID() {
 		return id;
 	}
+	
+	public int size() {
+		return size;
+	}
 }
 
