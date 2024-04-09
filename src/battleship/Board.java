@@ -36,6 +36,10 @@ public class Board {
 		}
 	}
 	
+	public char getSqState(int x, int y, boolean isPlayer) {
+		return squareBoard[x][y].state(isPlayer);
+	}
+	
 	public void placeSq(int x, int y, Ship s) {
 		squareBoard[x][y].place(s);
 	}

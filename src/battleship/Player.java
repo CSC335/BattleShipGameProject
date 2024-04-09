@@ -6,9 +6,10 @@ public class Player {
 	private Board myBoard;
 	private Board oppBoard;
 	
-	private final int BOARD_SIZE = 8;
+	// board is [0, 1, ..., 8, 9]
+	private final int BOARD_SIZE = 10;
 	
-	// ships is an arrayList flexibility (like adding ships midgame)
+	// ships is an arrayList for flexibility (like adding ships midgame)
 	private ArrayList<Ship> ships;
 	
 	// Player initializer
@@ -17,6 +18,7 @@ public class Player {
 		this.myBoard  = myBoard;
 		this.oppBoard = oppBoard;
 		
+		// TODO: this currently has no use
 		ships = new ArrayList<Ship>();
 	}
 	
@@ -25,8 +27,12 @@ public class Player {
 	   	orientation: (0, 1, 2, 3) -> (up, right, down, left) 
 	  	size: # cells that the ship takes up
 	*/
-	public boolean ShipAdd(int x, int y, int orientation, int size) {
-		int[][] shipArr = ShipInfoToArray(x, y, orientation, size);
+	public boolean ShipAdd(int x, int y, int orientation, Ship ship) {
+		ships.add(ship);
+		
+		//Ex. ShipInfoToArray(5, 5, 2, 3) returns
+ 		//	new int[][] {{5, 5}, {5, 4}, {5, 3}}
+		int[][] shipArr = ShipInfoToArray(x, y, orientation, ship.size());
 		for (int[] point : shipArr) {
 			
 			// return false if outside of board bounds.
@@ -35,21 +41,20 @@ public class Player {
 				return false;
 			}
 			
-			/* TODO: when board methods are made
-				if (myBoard.getCell(point[0], point[1]) != EMPTY) {
-					// TODO: output exception if necessary
-					  System.out.println("Player.ShipAdd() coords occupied");
-				    return false;
-				}
-				
-			 */
+			char curSquare = myBoard.getSqState(point[0], point[1], true);
+			
+			// return false if any ship square is occupied already
+			if (curSquare != 'X' && curSquare != '.') {
+				// TODO: output exception if necessary
+				System.out.println("Player.ShipAdd() coords occupied");
+				return false;
+			}
 		}
-		/* TODO: when board methods are made
 		
-		// orientation and size params may help with graphics.
-		myBoard.addShip(shipArr, orientation, size);
-
-		*/
+		// Note: Adding ships based on square makes graphics difficult in the long run
+		for (int[] point : shipArr) {
+			myBoard.placeSq(point[0], point[1], ship);
+		}
 		return true;
 	}
 	
@@ -108,20 +113,13 @@ public class Player {
 			return false;
 		}
 		
-		/* TODO: when board methods are made
-		if (oppBoard.getCell(point[0], point[1]) != SHOT_AT_BEFORE) {
-			// TODO: output exception if necessary
+		// return false if coords have already been guessed
+		if (oppBoard.getSqState(x, y, false) != '.') {
 			System.out.println("Player.ShipFire() coords already tried");
 		    return false;
 		}
-	    */
 		
-		
-		/* TODO: when board methods are made
-		
-		// orientation and size params may help with graphics.
-		oppBoard.fire(int x, int y);
-		*/
+		oppBoard.guess(x, y);
 		
 		return true;
 	}

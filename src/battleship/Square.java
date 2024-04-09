@@ -27,6 +27,19 @@ public class Square {
 	}
 	
 	//tbh i forgot which chars we were using, might need to be updated
+	/*
+	States:
+		player == true:
+			hasShip & guessed    -> ship.getID() (lower case)
+			hasShip & notGuessed -> ship.getID() (upper case)
+			noShip & guessed     -> 'X'
+			noShip & notGuessed  -> '.'
+		player == false:
+			hasShip & guessed    -> 'H' 
+			hasShip & notGuessed -> '.' 
+			noShip & guessed     -> 'X'
+			notGuessed           -> '.'
+	*/
 	public char state(boolean player) {
 		if(player) {
 			if(ship == null && guessed == true) {
