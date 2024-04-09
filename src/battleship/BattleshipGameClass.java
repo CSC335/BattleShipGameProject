@@ -6,8 +6,12 @@ public class BattleshipGameClass {
 	
 	public static void BattleshipGameClass() {
 		//initialize the game
-		//make player + ai 
-		// create the gui
+		// start the gui
+		//if start then
+		//make the board player 1
+		//make the board player 2
+		//make player + ai with their respective boards
+		// start the gui
 		//having a class that initializes everything makes it much easier for the different pieces to communicate between eachother
 	}
 	

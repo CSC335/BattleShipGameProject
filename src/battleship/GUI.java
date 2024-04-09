@@ -4,12 +4,14 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
@@ -204,6 +206,34 @@ public class GUI extends Application {
 		// Perform the game logic for the guess
 		System.out.println("Player guess: (" + xValue + ", " + yValue + ")");
 		
+		//make sure guess is within bounds
+		if (xValue >= 10 || xValue < 0) {
+			if (yValue >= 10 || yValue < 0) {
+				//alert both values invalid
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setHeaderText("Invalid Guess");
+				alert.setContentText("Both X and Y coordinates are invalid");
+				alert.showAndWait();
+			}else {
+			//alert x invalid	
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setHeaderText("Invalid Guess");
+			alert.setContentText("X coordinate is invalid");
+			alert.showAndWait();
+			}}else if (yValue >= 10 || yValue < 0) {
+			//alert y invalid 
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setHeaderText("Invalid Guess");
+				alert.setContentText("Y coordinate is invalid");
+				alert.showAndWait();
+		}
+		//make sure guess hasn't already been guessed
+		if (board.guessedBoard[xValue][yValue]) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setHeaderText("Invalid Guess");
+			alert.setContentText("This location has already been guessed");
+			alert.showAndWait();
+		}
 		// if game still running update the board
 		if (board.getState()) {
 			board.guess(xValue, yValue);
