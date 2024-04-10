@@ -11,9 +11,8 @@ public class BattleshipGame {
 	public BattleshipGame(boolean isAI) {
 		this.isAI = isAI;
 		
-		//a = new Board(!isAI);
-		// a is true for testing purposes
-		a = new Board(true);
+		// set a to new Board(true)
+		a = new Board(!isAI);
 		b = new Board(true);
 		if (isAI) {
 			// AI on left, player on right
