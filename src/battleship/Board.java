@@ -1,14 +1,21 @@
 package battleship;
 
 public class Board {
-
+	public int shipsPlaced = 0;
+	final static int TOTAL_SHIPS = 5;
+	
 	Ships ships;
 	Square[][] squareBoard;
+	
+	// I implemented it in a way that doesn't need guessBoard 
+	// since we can get that info from squareBoard !
+	// We may be able to get rid of this
 	boolean[][] guessedBoard;
+	
 	//if player board, player true
 	//if computer, false
 	boolean player;
-	boolean gameState;
+	boolean isOver;
 	
 	public Board(boolean p) {
 		//initialize board
@@ -22,7 +29,7 @@ public class Board {
 			}
 		}
 		player = p;
-		gameState = true;
+		isOver = false;
 	}
 	
 	public boolean guess(int x, int y) {
@@ -36,6 +43,45 @@ public class Board {
 		}
 	}
 	
+	// returns null if all ships are placed; 
+	// otherwise, returns next ship to be placed
+	public Ship getNextShip() {
+		if (shipsPlaced < TOTAL_SHIPS) {
+			return ships.getShips()[shipsPlaced];
+		} else {
+			return null;
+			
+		}
+	}
+	
+	// Adds a ship to the board. To be called by player/AI
+	// shipArr is in the format of { {x1, y1}, {x2, y2}, ...  }
+	public boolean addShip(int[][] shipArr, Ship ship) {
+		for (int[] point : shipArr) {
+			
+			// return false if outside of board bounds.
+			if (point[0] < 0 || point[0] >= 10 || point[1] < 0 || point[1] >= 10) {
+				System.out.println("Player.ShipAdd() coords out of bounds");
+				return false;
+			}
+			
+			char curSquare = getSqState(point[0], point[1], true);
+			
+			// return false if any ship square is occupied already
+			if (curSquare != 'X' && curSquare != '.') {
+				// TODO: output exception if necessary
+				System.out.println("Player.ShipAdd() coords occupied");
+				return false;
+			}
+		}
+		
+		for (int[] point : shipArr) {
+			placeSq(point[0], point[1], ship);
+		}
+		return true;
+		
+	}
+	
 	public char getSqState(int x, int y, boolean isPlayer) {
 		return squareBoard[x][y].state(isPlayer);
 	}
@@ -44,13 +90,13 @@ public class Board {
 		squareBoard[x][y].place(s);
 	}
 	
-	public boolean getState() {
+	public boolean isOver() {
 		//true = running, false = all ships sunk
-		return gameState;
+		return isOver;
 	}
 	
 	public void gameOver() {
-		gameState = false;
+		isOver = true;
 	}
 	
 	//return char representation of board

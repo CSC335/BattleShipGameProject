@@ -37,9 +37,15 @@ public class GUI extends Application {
 	private RadioButton aiRadioButton = new RadioButton("AI");
 	private RadioButton players2RadioButton = new RadioButton("2 Players");
 
-	// Create new board object
-	private Board board = new Board(true);
+	static BattleshipGame game;
 
+	static TextArea firstBoardArea = new TextArea();
+	static TextArea secondBoardArea = new TextArea();
+	
+	private static boolean isPlayer1 = true;
+	
+	static BorderPane root;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		// Set title "Battleship" style
@@ -71,11 +77,11 @@ public class GUI extends Application {
 			if (aiRadioButton.isSelected()) {
 				// Start AI game
 				System.out.println("Starting AI game...");
-				startGame(primaryStage, board, true);
+				startGame(primaryStage, true);
 			} else if (players2RadioButton.isSelected()) {
 				// Start 2 players game
 				System.out.println("Starting 2 players game...");
-				startGame(primaryStage, board, false);
+				startGame(primaryStage, false);
 			} else {
 				// No game mode selected
 				System.out.println("Please select a game mode.");
@@ -99,27 +105,21 @@ public class GUI extends Application {
 		primaryStage.show();
 	}
 
-	public static void startGame(Stage primaryStage, Board board, boolean isAI) {
-		// Create TextFields, inputs, and button as before
+	public static void startGame(Stage primaryStage, boolean isAI) {
+		game = new BattleshipGame(isAI);
 
-		// Create TextArea for opponent and player's battlefield
-		TextArea opponentArea = new TextArea();
 //		opponentArea.setAlignment(Pos.CENTER);
-		opponentArea.setEditable(false); // Set to read-only
-		opponentArea.setMaxWidth(360);
-		opponentArea.setMaxHeight(368);
-		opponentArea.setWrapText(true);
-		opponentArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
+		firstBoardArea.setEditable(false); // Set to read-only
+		firstBoardArea.setMaxWidth(360);
+		firstBoardArea.setMaxHeight(368);
+		//secondBoardArea.setWrapText(true);
+		firstBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
 
-		// Simulate making board and print board content
-		board.makeTest();
-		printBoard(board, opponentArea);
-
-		TextArea playerArea = new TextArea();
-		playerArea.setEditable(false); // Set to read-only
-		playerArea.setMaxWidth(360);
-		playerArea.setMaxHeight(368);
-		playerArea.setWrapText(true);
+		secondBoardArea.setEditable(false); // Set to read-only
+		secondBoardArea.setMaxWidth(360);
+		secondBoardArea.setMaxHeight(368);
+		//firstBoardArea.setWrapText(true);
+		secondBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
 
 		// Determine board labels based on isAI flag
 		Label leftLabel, rightLabel;
@@ -142,70 +142,174 @@ public class GUI extends Application {
 		// Create HBox for left and right labels
 		HBox labelBox = new HBox(300, leftLabel, rightLabel);
 		labelBox.setAlignment(Pos.CENTER);
-
-		// Create input fields for x and y coordinates
-		TextField xInput = new TextField();
-		TextField yInput = new TextField();
-
-		// Create Guess button
-		Button guessButton = new Button("G u e s s");
-		guessButton
-				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
-						+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
-		guessButton.setOnAction(event -> {
-			// call userGuess() function to update board
-			updateBoard(board, opponentArea, xInput, yInput);
-		});
-
-		// Create a GridPane to hold the xInput, yInput, and guessButton
-		GridPane inputGrid = new GridPane();
-		inputGrid.setHgap(10);
-		inputGrid.setVgap(5);
-		inputGrid.addRow(0, new Label("X:"), xInput);
-		inputGrid.addRow(1, new Label("Y:"), yInput);
-		inputGrid.add(guessButton, 2, 0, 1, 2);
-		inputGrid.setAlignment(Pos.CENTER);
-
+		
+		
 		// Create a BorderPane to hold all elements
-		BorderPane root = new BorderPane();
+		root = new BorderPane();
 		root.setPadding(new Insets(40));
 		root.setTop(labelBox);
-		root.setLeft(opponentArea);
-		root.setRight(playerArea);
-		root.setBottom(inputGrid);
+		root.setLeft(firstBoardArea);
+		root.setRight(secondBoardArea);
 
+		// set input grid in addships mode
+		setInputGrid(false);
 		// Set up the scene
 		Scene scene = new Scene(root, 860, 550);
-
+		
+		// prints both boards
+		printBoard(true);
+		printBoard(false);
+		
 		// Set the stage title and scene, then show the stage
 		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+	private static void setInputGrid(boolean fireMode) {
+		if (fireMode) {
+			GridPane inputGrid = new GridPane();
+			// Create input fields for x and y coordinates
+			TextField xInput = new TextField();
+			TextField yInput = new TextField();
 
-	private static void printBoard(Board b, TextArea textArea) {
-		char[][] testB = b.getCharBoard();
-		StringBuilder boardString = new StringBuilder();
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				boardString.append(testB[i][j]).append(" ");
-				System.out.print(testB[i][j]);
-				System.out.print(" ");
-			}
-			boardString.append("\n");
-			System.out.println();
+			// Create Guess button
+			Button guessButton = new Button("G u e s s");
+			guessButton
+					.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
+							+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
+			guessButton.setOnAction(event -> {
+				// call userGuess() function to update board
+				playMove(xInput, yInput);
+			});
+			
+			
+			// Create a GridPane to hold the xInput, yInput, and guessButton
+			inputGrid.setHgap(10);
+			inputGrid.setVgap(5);
+			inputGrid.addRow(0, new Label("X:"), xInput);
+			inputGrid.addRow(1, new Label("Y:"), yInput);
+			inputGrid.add(guessButton, 2, 0, 1, 2);
+			inputGrid.setAlignment(Pos.CENTER);
+			
+			root.setBottom(inputGrid);
+		} else {
+			// TODO: I'm bad at writing UI :(
+			// TODO: the bad UI code is all in this else statement
+			
+			GridPane inputGrid = new GridPane();
+			
+			// Create input fields for x and y coordinates
+			TextField xInput = new TextField();
+			TextField yInput = new TextField();
+			TextField orientation = new TextField();
+			Ship nextShip = game.nextShip(isPlayer1);
+			
+			if (nextShip == null)
+				setInputGrid(true);
+			
+			Label shipSize = new Label("Size:" + nextShip.size());
+			
+			
+			// Create Guess button
+			Button guessButton = new Button("P l a c e");
+			guessButton
+					.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
+							+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
+			guessButton.setOnAction(event -> {
+				// call userGuess() function to update board
+				addShip(xInput, yInput, orientation, shipSize);
+			});
+			
+			// Create a GridPane to hold the xInput, yInput, and guessButton
+			inputGrid.setHgap(10);
+			inputGrid.setVgap(5);
+			inputGrid.addRow(0, new Label("X:"), xInput);
+			inputGrid.addRow(1, new Label("Y:"), yInput);
+			inputGrid.addRow(2, new Label("rot (0,1,2,3):"), orientation);
+			inputGrid.add(shipSize, 2, 0, 1, 1);
+			inputGrid.add(guessButton, 2, 1, 1, 3);
+			inputGrid.setAlignment(Pos.CENTER);
+			
+			root.setBottom(inputGrid);
 		}
-		textArea.setText(boardString.toString());
 	}
-
-	private static void updateBoard(Board board, TextArea textArea, TextField xInput, TextField yInput) {
+	
+	private static void addShip(TextField xInput, TextField yInput, TextField orientation, Label shipSize) {
+		int xValue, yValue, rotValue;
 		// Process the guess based on xInput and yInput values
-		int xValue = Integer.parseInt(xInput.getText());
-		int yValue = Integer.parseInt(yInput.getText());
+		try {
+			xValue = Integer.parseInt(xInput.getText());
+			yValue = Integer.parseInt(yInput.getText());
+			rotValue = Integer.parseInt(orientation.getText());
+		} catch (Exception e) {
+			// TODO: add alert if we want one, or just keep like this
+			System.out.println("x, y, or rot is not parsable to int");
+			return;
+		}
 		
 		// Perform the game logic for the guess
-		System.out.println("Player guess: (" + xValue + ", " + yValue + ")");
+		System.out.println("Player " + (isPlayer1 ? "1" : "2") + " place: (" + xValue + ", " + yValue + "," + rotValue + ")");
 		
+		//  does nothing else (may put up alerts tho) if move is invalid
+		if (!game.humanPlaceShip(isPlayer1, xValue, yValue, rotValue, game.nextShip(isPlayer1)))
+			return;
+		
+		printBoard(false);
+		printBoard(true);
+		
+		xInput.clear();
+		yInput.clear();
+		orientation.clear();
+		
+		// plays AI move or switches to next player
+		if (game.isAI) {
+			game.computerPlaceShip();
+			printBoard(true);
+		}
+		else
+			isPlayer1 = !isPlayer1;
+		System.out.println(game.nextShip(isPlayer1));
+		if (game.nextShip(isPlayer1) == null)
+			setInputGrid(true);
+		else
+			shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
+	}
+	
+
+	private static void printBoard(boolean firstBoard) {
+		if (firstBoard) {
+			firstBoardArea.setText(game.getBoard(firstBoard));
+		} else {
+			secondBoardArea.setText(game.getBoard(firstBoard));
+		}
+	}
+
+	private static void playMove(TextField xInput, TextField yInput) {
+		int xValue, yValue;
+		// Process the guess based on xInput and yInput values
+		try {
+			xValue = Integer.parseInt(xInput.getText());
+			yValue = Integer.parseInt(yInput.getText());
+		} catch (Exception e) {
+			// TODO: add alert if we want one, or just keep like this
+			System.out.println("x or y is not parsable to int");
+			return;
+		}
+		
+		// Perform the game logic for the guess
+		System.out.println("Player " + (isPlayer1 ? "1" : "2") + " guess: (" + xValue + ", " + yValue + ")");
+		
+		if (game.gameOver())
+			return;
+		
+		//  does nothing else (may put up alerts tho) if move is invalid
+		if (!game.humanPlayMove(isPlayer1, xValue, yValue))
+			return;
+		
+		/*
+		 Luckie here! I put these in player
+		 * 
 		//make sure guess is within bounds
 		if (xValue >= 10 || xValue < 0) {
 			if (yValue >= 10 || yValue < 0) {
@@ -227,6 +331,7 @@ public class GUI extends Application {
 				alert.setContentText("Y coordinate is invalid");
 				alert.showAndWait();
 		}
+		
 		//make sure guess hasn't already been guessed
 		if (board.guessedBoard[xValue][yValue]) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -234,13 +339,20 @@ public class GUI extends Application {
 			alert.setContentText("This location has already been guessed");
 			alert.showAndWait();
 		}
+		*/
+		
 		// if game still running update the board
-		if (board.getState()) {
-			board.guess(xValue, yValue);
-			printBoard(board, textArea);
-			xInput.clear();
-			yInput.clear();
+		printBoard(isPlayer1);
+		xInput.clear();
+		yInput.clear();
+		
+		// plays AI move or switches to next player
+		if (game.isAI) {
+			game.computerPlayMove();
+			printBoard(false);
 		}
+		else
+			isPlayer1 = !isPlayer1;
 	}
 
 	public static void main(String[] args) {
