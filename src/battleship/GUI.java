@@ -300,8 +300,9 @@ public class GUI extends Application {
 		// Perform the game logic for the guess
 		System.out.println("Player " + (isPlayer1 ? "1" : "2") + " guess: (" + xValue + ", " + yValue + ")");
 		
-		if (game.gameOver())
-			return;
+		if (game.gameOver()) {
+			//make game over screen here
+		}
 		
 		//  does nothing else (may put up alerts tho) if move is invalid
 		if (!game.humanPlayMove(isPlayer1, xValue, yValue))
