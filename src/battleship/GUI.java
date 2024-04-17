@@ -1,5 +1,7 @@
 package battleship;
 
+import java.util.Scanner;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -55,6 +57,8 @@ public class GUI extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		GUI.primaryStage = primaryStage; 
+		
 		// Set title "Battleship" style
 		titleLabel.setFont(Font.font("Impact", 40));
 		titleLabel.setTextFill(Color.TRANSPARENT);
@@ -197,6 +201,18 @@ public class GUI extends Application {
 			inputGrid.addRow(0, new Label("X:"), xInput);
 			inputGrid.addRow(1, new Label("Y:"), yInput);
 			inputGrid.add(guessButton, 2, 0, 1, 2);
+			
+			// ------------------------debug code-----------------------
+			// TODO: delete this when it is no longer necessary
+			Button debugButton = new Button("Debug: end game now");
+			debugButton.setOnAction(event -> {try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}});
+			inputGrid.add(debugButton, 3, 0, 1, 1);
+			// ------------------------debug code-----------------------
+			
 			inputGrid.setAlignment(Pos.CENTER);
 			
 			root.setBottom(inputGrid);
@@ -228,6 +244,9 @@ public class GUI extends Application {
 				addShip(xInput, yInput, orientation, shipSize);
 			});
 			
+			
+			
+			
 			// Create a GridPane to hold the xInput, yInput, and guessButton
 			inputGrid.setHgap(10);
 			inputGrid.setVgap(5);
@@ -236,6 +255,18 @@ public class GUI extends Application {
 			inputGrid.addRow(2, new Label("rot (0,1,2,3):"), orientation);
 			inputGrid.add(shipSize, 2, 0, 1, 1);
 			inputGrid.add(guessButton, 2, 1, 1, 3);
+			
+			// ------------------------debug code-----------------------
+			// TODO: delete this when it is no longer necessary
+			Button debugButton = new Button("Debug: end game now");
+			debugButton.setOnAction(event -> {try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}});
+			inputGrid.add(debugButton, 3, 0, 1, 1);
+			// ------------------------debug code-----------------------
+			
 			inputGrid.setAlignment(Pos.CENTER);
 			
 			root.setBottom(inputGrid);
@@ -384,12 +415,14 @@ public class GUI extends Application {
 	    Label gameOver = new Label("  Game Over  ");
 	    //in the stat label makes it so it is the 
 	    //(p1.ss + "Ships Sunk" + p2.ss)
-	    //Label stats = new Label("P1       Game Stats      P2");
-	    Label stats = new Label(String.format("%-10s-", "GameStats"));
-	    Label ss = new Label("Ships Sunk");
-	    Label gm = new Label("Guesses Made");
-	    Label miss = new Label("misses");
-	    Label hits = new Label("Hits");
+	    int[] statsP1 = game.getStats(true);
+	    int[] statsP2 = game.getStats(false);
+	    
+	    Label stats = new Label("P1       Game Stats      P2");
+	    Label ss = new Label(String.format("%-10s", statsP1[0]) + "Ships Sunk"  + String.format("%10s", statsP2[0]));
+	    Label gm = new Label(String.format("%-7s", statsP1[1]) + "Guesses Made" + String.format("%7s", statsP2[1]));
+	    Label miss = new Label(String.format("%-13s", statsP1[2]) + "Hisses" + String.format("%14s", statsP2[2]));
+	    Label hits = new Label(String.format("%-15s", statsP1[3]) + "Hits" + String.format("%16s", statsP2[3]));
 	    
 		gameOver.setFont(Font.font("Impact", 40));
 		stats.setFont(Font.font("Impact", 20));

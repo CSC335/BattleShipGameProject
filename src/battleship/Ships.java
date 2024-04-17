@@ -25,6 +25,15 @@ public class Ships {
 		}
 	}
 	
+	public int getSunkShips() {
+		int count = 0;
+		for (Ship ship : shipObjs) {
+			if (ship.isSunk())
+				count++;
+		}
+		return count;
+	}
+	
 	public Ship[] getShips() {
 		return shipObjs;
 	}

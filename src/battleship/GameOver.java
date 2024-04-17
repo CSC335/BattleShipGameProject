@@ -32,7 +32,6 @@ public class GameOver extends Application{
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		// TODO Auto-generated method stub
 		StackPane gO = new StackPane();
 		StackPane statTitle = new StackPane();
 		StackPane	statsTwo = new StackPane();
