@@ -8,6 +8,9 @@ public class BattleshipGame {
 	
 	public boolean isAI;
 	
+	public int b1Hits = 0, b1Misses = 0;
+	public int b2Hits = 0, b2Misses = 0;
+	
 	public BattleshipGame(boolean isAI) {
 		this.isAI = isAI;
 		
@@ -63,14 +66,19 @@ public class BattleshipGame {
 	}
 	
 	public boolean humanPlayMove(boolean isPlayer1, int x, int y) {
+		boolean playing;
 		if (isPlayer1) {
-			return player1.playMove(x, y);
+			// playMove checks is move is valid before playing
+			playing = player1.playMove(x, y);
 		} else {
-			return player2.playMove(x, y);
+			playing = player2.playMove(x, y);
 		}
+		
+		return playing;
 	}
 	
 	public void computerPlayMove() {
+		// guess will play move; this assumes move is valid
 		int[] guess = strategyAI.desiredMove(b);
 		b.guess(guess[0], guess[1]);
 	}

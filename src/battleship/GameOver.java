@@ -49,8 +49,9 @@ public class GameOver extends Application{
 	    //in the stat label makes it so it is the 
 	    //(p1.ss + "Ships Sunk" + p2.ss)
 	    Label stats = new Label("P1       Game Stats      P2");
-	    Label ss = new Label("Ships Sunk");
-	    Label gm = new Label("Guesses Made");
+	    //Label ss = new Label("Ships Sunk");
+	    Label ss = new Label(String.format("%-10s", "21") + "Ships Sunk"  + String.format("%10s", "1"));
+	    Label gm = new Label(String.format("%-7s", "1") + "Guesses Made" + String.format("%8s", "1"));
 	    Label miss = new Label("misses");
 	    Label hits = new Label("Hits");
 	    
