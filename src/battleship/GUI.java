@@ -552,6 +552,7 @@ public class GUI extends Application {
 		Media media = new Media(uri.toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
 		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.setAutoPlay(true);
 		mediaPlayer.play();
   
 	}
@@ -565,6 +566,21 @@ public class GUI extends Application {
 		Media media = new Media(uri.toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
 		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.setAutoPlay(true);
+		mediaPlayer.play();
+
+	}
+	
+	public static void playExplosion() {
+
+		String str = "Mp3s/Explosion sound effect.mp3";
+		System.out.println(str);
+		File file = new File(str);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.setAutoPlay(true);
 		mediaPlayer.play();
 
 	}
