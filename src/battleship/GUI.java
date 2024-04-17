@@ -1,7 +1,10 @@
 package battleship;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Scanner;
 
+import demoMediaPlayer.PlayAnMP3.Waiter;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,6 +28,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -43,6 +48,12 @@ public class GUI extends Application {
 	// Create radio buttons for game mode selection
 	private RadioButton aiRadioButton = new RadioButton("AI");
 	private RadioButton players2RadioButton = new RadioButton("2 Players");
+	
+	private static RadioButton funMusic = new RadioButton("Fun Music");
+	private static RadioButton boringMusic = new RadioButton("Boring Music");
+	
+	private static boolean fun = false;
+
 
 	static BattleshipGame game;
 
@@ -54,6 +65,7 @@ public class GUI extends Application {
 	static BorderPane root;
 	
 	private static Stage primaryStage;
+	private MediaPlayer mediaPlayer;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -69,6 +81,14 @@ public class GUI extends Application {
 		// Apply effects like drop shadow and reflection
 		titleLabel.setEffect(new DropShadow());
 		titleLabel.setEffect(new Reflection());
+		
+		//Create radio buttons for music selection
+		ToggleGroup musicSelection = new ToggleGroup();
+		funMusic.setToggleGroup(musicSelection);
+		boringMusic.setToggleGroup(musicSelection);
+		funMusic.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		boringMusic.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+
 
 		// Create radio buttons for game mode selection
 		ToggleGroup gameModeGroup = new ToggleGroup();
@@ -88,10 +108,20 @@ public class GUI extends Application {
 			if (aiRadioButton.isSelected()) {
 				// Start AI game
 				System.out.println("Starting AI game...");
+				if (funMusic.isSelected()) {
+					fun = true;
+				}else {
+					fun = false;
+				}
 				startGame(primaryStage, true);
 			} else if (players2RadioButton.isSelected()) {
 				// Start 2 players game
 				System.out.println("Starting 2 players game...");
+				if (funMusic.isSelected()) {
+					fun = true;
+				}else {
+					fun = false;
+				}
 				startGame(primaryStage, false);
 			} else {
 				// No game mode selected
@@ -102,9 +132,12 @@ public class GUI extends Application {
 		// Create an HBox to hold the radio buttons
 		HBox radioBox = new HBox(35, aiRadioButton, players2RadioButton);
 		radioBox.setAlignment(Pos.CENTER);
+		
+		HBox musicBox = new HBox(35, funMusic, boringMusic);
+		musicBox.setAlignment(Pos.CENTER);
 
 		// Create a VBox to hold all elements
-		VBox root = new VBox(60, titleLabel, radioBox, startButton);
+		VBox root = new VBox(60, titleLabel, radioBox,musicBox, startButton);
 		root.setAlignment(Pos.CENTER);
 		root.setPadding(new Insets(50));
 
@@ -170,6 +203,13 @@ public class GUI extends Application {
 		// prints both boards
 		printBoard(true);
 		printBoard(false);
+		
+		//play song
+		if (fun == true) {
+			playAFunSong();
+		}else {
+			playABoringSong();
+		}
 		
 		// Set the stage title and scene, then show the stage
 		primaryStage.setTitle("Battleship Game");
@@ -502,5 +542,32 @@ public class GUI extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	private static void playAFunSong() {
+
+		String str = "Mp3s/tgw.mp3";
+		System.out.println(str);
+		File file = new File(str);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.play();
+  
+	}
+	
+	private static void playABoringSong() {
+
+		String str = "Mp3s/[1080p HD] Call of Duty Black Ops Multiplayer Menu Music.mp3";
+		System.out.println(str);
+		File file = new File(str);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.play();
+
+	}
+	
 	
 }
