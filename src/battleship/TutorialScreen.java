@@ -53,6 +53,7 @@ public class TutorialScreen extends Application {
 		moreInfo.setOnAction(event->{
 			if (info == true) {
 				instructions.setText("I give up on teaching you");
+				tutorial.setFont(Font.font("Impact", 80));
 			}else {
 				info = true;
 			instructions.setText("I will make it real simple for you \n"
@@ -62,6 +63,7 @@ public class TutorialScreen extends Application {
 					 + "4. if its a hit guess the nearby spots to sink a ship\n"
 					 + "5. you want to sink all of their ships before they get yours \n"
 					 + "6. dude idk if you havent figured it out by now\n");
+				tutorial.setFont(Font.font("Impact", 60));
 			}});
 		done.setOnAction(event->{
 			javafx.application.Platform.exit();
