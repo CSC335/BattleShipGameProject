@@ -20,7 +20,7 @@ public class TutorialScreen extends Application {
 		launch(args);
 	}
 	Button moreInfo, done;
-	
+	boolean info;
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
@@ -39,6 +39,7 @@ public class TutorialScreen extends Application {
 		tutorial.setTextFill(Color.rgb(86, 147, 187));
 		tutorial.setEffect(new Glow(0.8));
 		tutorial.setAlignment(Pos.CENTER);
+		instructions.setFont(Font.font("Impact", 15));
 		GridPane buttons = new GridPane();
 		moreInfo = new Button("More info");
 		done = new Button("I get it");
@@ -48,7 +49,12 @@ public class TutorialScreen extends Application {
 		Label space = new Label("  ");
 		buttons.add(space, 0, 1);
 		buttons.setHgap(20);
+		info = false;
 		moreInfo.setOnAction(event->{
+			if (info == true) {
+				instructions.setText("I give up on teaching you");
+			}else {
+				info = true;
 			instructions.setText("I will make it real simple for you \n"
 					+ "1. The ammo listed is the amount of 'Special shots' \n"
 					 + "2. A special shot works ...\n"
@@ -56,7 +62,7 @@ public class TutorialScreen extends Application {
 					 + "4. if its a hit guess the nearby spots to sink a ship\n"
 					 + "5. you want to sink all of their ships before they get yours \n"
 					 + "6. dude idk if you havent figured it out by now\n");
-		});
+			}});
 		done.setOnAction(event->{
 			javafx.application.Platform.exit();
 		});
