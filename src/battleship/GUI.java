@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Scanner;
 
-import demoMediaPlayer.PlayAnMP3.Waiter;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
