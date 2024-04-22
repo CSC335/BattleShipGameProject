@@ -11,13 +11,23 @@ public class BattleshipGame {
 	public int b1Hits = 0, b1Misses = 0;
 	public int b2Hits = 0, b2Misses = 0;
 	
-	public BattleshipGame(boolean isAI) {
-		this.isAI = isAI;
+	public BattleshipGame(String whichAI) {
+		// check if it is random or hard ai right now
+		if(whichAI == "random" || whichAI == "hard") {
+			this.isAI = true;
+		} else {
+			this.isAI = false;
+		}
 		
 		// set a to new Board(true)
 		a = new Board(!isAI);
 		b = new Board(true);
-		if (isAI) {
+		
+		if (whichAI == "random") {
+			// AI on left, player on right
+			player1 = new Player(b, a);
+			strategyAI = new RandomAI();
+		}else if (whichAI == "hard") {
 			// AI on left, player on right
 			player1 = new Player(b, a);
 			strategyAI = new Ai();
