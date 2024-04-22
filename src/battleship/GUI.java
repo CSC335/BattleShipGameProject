@@ -46,7 +46,8 @@ public class GUI extends Application {
 	private Label titleLabel = new Label("Battleship");
 
 	// Create radio buttons for game mode selection
-	private RadioButton aiRadioButton = new RadioButton("AI");
+	private RadioButton randomAiRadioButton = new RadioButton("Random AI");
+	private RadioButton hardAiRadioButton = new RadioButton("Hard AI");
 	private RadioButton players2RadioButton = new RadioButton("2 Players");
 	
 	private static RadioButton funMusic = new RadioButton("Fun Music");
@@ -92,10 +93,11 @@ public class GUI extends Application {
 
 		// Create radio buttons for game mode selection
 		ToggleGroup gameModeGroup = new ToggleGroup();
-		aiRadioButton.setToggleGroup(gameModeGroup);
+		randomAiRadioButton.setToggleGroup(gameModeGroup);
+		hardAiRadioButton.setToggleGroup(gameModeGroup);
 		players2RadioButton.setToggleGroup(gameModeGroup);
-		aiRadioButton
-				.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		randomAiRadioButton.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		hardAiRadioButton.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
 		players2RadioButton
 				.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
 
@@ -105,15 +107,24 @@ public class GUI extends Application {
 				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
 						+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
 		startButton.setOnAction(event -> {
-			if (aiRadioButton.isSelected()) {
+			if (randomAiRadioButton.isSelected()) {
 				// Start AI game
-				System.out.println("Starting AI game...");
+				System.out.println("Starting random AI game...");
 				if (funMusic.isSelected()) {
 					fun = true;
 				}else {
 					fun = false;
 				}
-				startGame(primaryStage, true);
+				startGame(primaryStage, "random");
+			} else if (hardAiRadioButton.isSelected()) {
+				// Start AI game
+				System.out.println("Starting hard AI game...");
+				if (funMusic.isSelected()) {
+					fun = true;
+				}else {
+					fun = false;
+				}
+				startGame(primaryStage, "hard");
 			} else if (players2RadioButton.isSelected()) {
 				// Start 2 players game
 				System.out.println("Starting 2 players game...");
@@ -122,7 +133,7 @@ public class GUI extends Application {
 				}else {
 					fun = false;
 				}
-				startGame(primaryStage, false);
+				startGame(primaryStage, "notAI");
 			} else {
 				// No game mode selected
 				System.out.println("Please select a game mode.");
@@ -130,7 +141,7 @@ public class GUI extends Application {
 		});
 
 		// Create an HBox to hold the radio buttons
-		HBox radioBox = new HBox(35, aiRadioButton, players2RadioButton);
+		HBox radioBox = new HBox(35, randomAiRadioButton, hardAiRadioButton, players2RadioButton);
 		radioBox.setAlignment(Pos.CENTER);
 		
 		HBox musicBox = new HBox(35, funMusic, boringMusic);
@@ -142,15 +153,15 @@ public class GUI extends Application {
 		root.setPadding(new Insets(50));
 
 		// Set up the scene
-		Scene scene = new Scene(root, 400, 300);
+		Scene scene = new Scene(root, 500, 400);
 
 		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
-	public static void startGame(Stage primaryStage, boolean isAI) {
-		game = new BattleshipGame(isAI);
+	public static void startGame(Stage primaryStage, String whichAI) {
+		game = new BattleshipGame(whichAI);
 
 //		opponentArea.setAlignment(Pos.CENTER);
 		firstBoardArea.setEditable(false); // Set to read-only
@@ -167,7 +178,7 @@ public class GUI extends Application {
 
 		// Determine board labels based on isAI flag
 		Label leftLabel, rightLabel;
-		if (isAI) {
+		if ((String) whichAI == "random" || (String) whichAI == "hard") {
 			leftLabel = new Label("AI Board");
 			rightLabel = new Label("Your Board");
 		} else {
@@ -195,7 +206,7 @@ public class GUI extends Application {
 		root.setLeft(firstBoardArea);
 		root.setRight(secondBoardArea);
 
-		// set input grid in addships mode
+		// set input grid in add ships mode
 		setInputGrid(false);
 		// Set up the scene
 		Scene scene = new Scene(root, 860, 550);
