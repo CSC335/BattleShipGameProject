@@ -1,5 +1,10 @@
 package battleship;
 
+import java.io.File;
+import java.net.URI;
+import java.util.Scanner;
+
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,11 +18,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.effect.Reflection;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -36,6 +48,12 @@ public class GUI extends Application {
 	// Create radio buttons for game mode selection
 	private RadioButton aiRadioButton = new RadioButton("AI");
 	private RadioButton players2RadioButton = new RadioButton("2 Players");
+	
+	private static RadioButton funMusic = new RadioButton("Fun Music");
+	private static RadioButton boringMusic = new RadioButton("Boring Music");
+	
+	private static boolean fun = false;
+
 
 	static BattleshipGame game;
 
@@ -46,8 +64,13 @@ public class GUI extends Application {
 	
 	static BorderPane root;
 	
+	private static Stage primaryStage;
+	private MediaPlayer mediaPlayer;
+	
 	@Override
 	public void start(Stage primaryStage) {
+		GUI.primaryStage = primaryStage; 
+		
 		// Set title "Battleship" style
 		titleLabel.setFont(Font.font("Impact", 40));
 		titleLabel.setTextFill(Color.TRANSPARENT);
@@ -58,6 +81,14 @@ public class GUI extends Application {
 		// Apply effects like drop shadow and reflection
 		titleLabel.setEffect(new DropShadow());
 		titleLabel.setEffect(new Reflection());
+		
+		//Create radio buttons for music selection
+		ToggleGroup musicSelection = new ToggleGroup();
+		funMusic.setToggleGroup(musicSelection);
+		boringMusic.setToggleGroup(musicSelection);
+		funMusic.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		boringMusic.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+
 
 		// Create radio buttons for game mode selection
 		ToggleGroup gameModeGroup = new ToggleGroup();
@@ -77,10 +108,20 @@ public class GUI extends Application {
 			if (aiRadioButton.isSelected()) {
 				// Start AI game
 				System.out.println("Starting AI game...");
+				if (funMusic.isSelected()) {
+					fun = true;
+				}else {
+					fun = false;
+				}
 				startGame(primaryStage, true);
 			} else if (players2RadioButton.isSelected()) {
 				// Start 2 players game
 				System.out.println("Starting 2 players game...");
+				if (funMusic.isSelected()) {
+					fun = true;
+				}else {
+					fun = false;
+				}
 				startGame(primaryStage, false);
 			} else {
 				// No game mode selected
@@ -91,9 +132,12 @@ public class GUI extends Application {
 		// Create an HBox to hold the radio buttons
 		HBox radioBox = new HBox(35, aiRadioButton, players2RadioButton);
 		radioBox.setAlignment(Pos.CENTER);
+		
+		HBox musicBox = new HBox(35, funMusic, boringMusic);
+		musicBox.setAlignment(Pos.CENTER);
 
 		// Create a VBox to hold all elements
-		VBox root = new VBox(60, titleLabel, radioBox, startButton);
+		VBox root = new VBox(60, titleLabel, radioBox,musicBox, startButton);
 		root.setAlignment(Pos.CENTER);
 		root.setPadding(new Insets(50));
 
@@ -160,6 +204,13 @@ public class GUI extends Application {
 		printBoard(true);
 		printBoard(false);
 		
+		//play song
+		if (fun == true) {
+			playAFunSong();
+		}else {
+			playABoringSong();
+		}
+		
 		// Set the stage title and scene, then show the stage
 		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
@@ -190,6 +241,18 @@ public class GUI extends Application {
 			inputGrid.addRow(0, new Label("X:"), xInput);
 			inputGrid.addRow(1, new Label("Y:"), yInput);
 			inputGrid.add(guessButton, 2, 0, 1, 2);
+			
+			// ------------------------debug code-----------------------
+			// TODO: delete this when it is no longer necessary
+			Button debugButton = new Button("Debug: end game now");
+			debugButton.setOnAction(event -> {try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}});
+			inputGrid.add(debugButton, 3, 0, 1, 1);
+			// ------------------------debug code-----------------------
+			
 			inputGrid.setAlignment(Pos.CENTER);
 			
 			root.setBottom(inputGrid);
@@ -221,6 +284,9 @@ public class GUI extends Application {
 				addShip(xInput, yInput, orientation, shipSize);
 			});
 			
+			
+			
+			
 			// Create a GridPane to hold the xInput, yInput, and guessButton
 			inputGrid.setHgap(10);
 			inputGrid.setVgap(5);
@@ -229,6 +295,18 @@ public class GUI extends Application {
 			inputGrid.addRow(2, new Label("rot (0,1,2,3):"), orientation);
 			inputGrid.add(shipSize, 2, 0, 1, 1);
 			inputGrid.add(guessButton, 2, 1, 1, 3);
+			
+			// ------------------------debug code-----------------------
+			// TODO: delete this when it is no longer necessary
+			Button debugButton = new Button("Debug: end game now");
+			debugButton.setOnAction(event -> {try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}});
+			inputGrid.add(debugButton, 3, 0, 1, 1);
+			// ------------------------debug code-----------------------
+			
 			inputGrid.setAlignment(Pos.CENTER);
 			
 			root.setBottom(inputGrid);
@@ -301,7 +379,11 @@ public class GUI extends Application {
 		System.out.println("Player " + (isPlayer1 ? "1" : "2") + " guess: (" + xValue + ", " + yValue + ")");
 		
 		if (game.gameOver()) {
-			//make game over screen here
+			try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		//  does nothing else (may put up alerts tho) if move is invalid
@@ -355,9 +437,153 @@ public class GUI extends Application {
 		else
 			isPlayer1 = !isPlayer1;
 	}
+	
+	public static void startGameOver() throws Exception {
+		Button newGame, end;
+		StackPane gO = new StackPane();
+		StackPane statTitle = new StackPane();
+		StackPane	statsTwo = new StackPane();
+		StackPane	statsThree = new StackPane();
+		StackPane	statsFour = new StackPane();
+		StackPane	statsFive = new StackPane();
+		BorderPane root = new BorderPane();
+		GridPane title = new GridPane();
+		//Border border = new Border();
+		GridPane gp = new GridPane();
+		GridPane buttons = new GridPane();
+		gO.setPadding(new Insets(10));
+	    Label gameOver = new Label("  Game Over  ");
+	    //in the stat label makes it so it is the 
+	    //(p1.ss + "Ships Sunk" + p2.ss)
+	    int[] statsP1 = game.getStats(true);
+	    int[] statsP2 = game.getStats(false);
+	    
+	    Label stats = new Label("P1       Game Stats      P2");
+	    Label ss = new Label(String.format("%-10s", statsP1[0]) + "Ships Sunk"  + String.format("%10s", statsP2[0]));
+	    Label gm = new Label(String.format("%-7s", statsP1[1]) + "Guesses Made" + String.format("%7s", statsP2[1]));
+	    Label miss = new Label(String.format("%-13s", statsP1[2]) + "Hisses" + String.format("%14s", statsP2[2]));
+	    Label hits = new Label(String.format("%-15s", statsP1[3]) + "Hits" + String.format("%16s", statsP2[3]));
+	    
+		gameOver.setFont(Font.font("Impact", 40));
+		stats.setFont(Font.font("Impact", 20));
+		//gameOver.setTextFill(Color.TRANSPARENT);
+
+		// Create a linear gradient for the text color
+		gameOver.setTextFill(Color.rgb(184, 16, 4));
+
+		// Apply effects like drop shadow and reflection
+		gameOver.setEffect(new InnerShadow());
+		gameOver.setEffect(new Glow(0.8));
+		
+		//add the Stats
+		gp.add(statTitle, 1, 0);
+		gp.add(statsTwo, 1, 1);
+		gp.add(statsThree, 1, 2);
+		gp.add(statsFour, 1, 3);
+		gp.add(statsFive, 1, 4);
+		gp.setAlignment(Pos.CENTER);
+		gp.setVgap(5);
+		
+		
+		statTitle.getChildren().add(stats);
+		statsTwo.getChildren().add(ss);
+		statsThree.getChildren().add(gm);
+		statsFour.getChildren().add(miss);
+		statsFive.getChildren().add(hits);
+		StackPane.setAlignment(stats, Pos.TOP_CENTER);
+		StackPane.setAlignment(ss, Pos.TOP_CENTER);
+		StackPane.setAlignment(gm, Pos.TOP_CENTER);
+		StackPane.setAlignment(miss, Pos.TOP_CENTER);
+		StackPane.setAlignment(hits, Pos.TOP_CENTER);
+	
+		//Images for title
+		Image image = new Image("File:images/BattleShip2.png");
+		ImageView pic = new ImageView();
+		pic.setFitWidth(80);
+		pic.setFitHeight(80);
+		pic.setImage(image);
+		title.add(pic, 0, 0);
+		Image image2 = new Image("File:images/BattleShip4.png");
+		ImageView pic2 = new ImageView();
+		pic2.setFitWidth(80);
+		pic2.setFitHeight(80);
+		pic2.setImage(image2);
+		title.add(pic2, 2, 0);
+		title.setAlignment(Pos.CENTER);
+		
+		//buttons
+		newGame = new Button("Play Again?");
+		end = new Button("End game.");
+		buttons.add(newGame, 0, 0);
+		buttons.add(end, 1, 0);
+		buttons.setVgap(20);
+		buttons.setHgap(20);
+		buttons.setAlignment(Pos.CENTER);
+		newGame.setOnAction(event -> {
+			//start a new game
+		});
+		end.setOnAction(event -> {
+			//close
+		});
+		
+		title.add(gO, 1, 0);
+		gO.getChildren().add(gameOver);
+		gO.setAlignment(gameOver, Pos.CENTER);
+		root.setTop(title);
+		root.setCenter(gp);
+		root.setAlignment(gp, Pos.CENTER);
+		root.setBottom(buttons);
+		root.setBorder(null);
+		Scene scene = new Scene(root, 400, 300);
+		primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	private static void playAFunSong() {
+
+		String str = "Mp3s/tgw.mp3";
+		System.out.println(str);
+		File file = new File(str);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.setAutoPlay(true);
+		mediaPlayer.play();
+  
+	}
+	
+	private static void playABoringSong() {
+
+		String str = "Mp3s/[1080p HD] Call of Duty Black Ops Multiplayer Menu Music.mp3";
+		System.out.println(str);
+		File file = new File(str);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.setAutoPlay(true);
+		mediaPlayer.play();
+
+	}
+	
+	public static void playExplosion() {
+
+		String str = "Mp3s/Explosion sound effect.mp3";
+		System.out.println(str);
+		File file = new File(str);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		//mediaPlayer.setOnEndOfMedia(new Waiter());
+		mediaPlayer.setAutoPlay(true);
+		mediaPlayer.play();
+
+	}
+	
 	
 }

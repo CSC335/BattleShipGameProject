@@ -8,6 +8,9 @@ public class BattleshipGame {
 	
 	public boolean isAI;
 	
+	public int b1Hits = 0, b1Misses = 0;
+	public int b2Hits = 0, b2Misses = 0;
+	
 	public BattleshipGame(boolean isAI) {
 		this.isAI = isAI;
 		
@@ -33,11 +36,18 @@ public class BattleshipGame {
 		//having a class that initializes everything makes it much easier for the different pieces to communicate between eachother
 	}
 	
-	//we should probably have a function that allows the players to move their ships into different positions
-	//at the beginning of the game and then have another function for the actual gameplay
-	//im not sure what class to put these in yet so i am putting my thoughts here :)
-	
-	//I think we should make a barebones GUI first too to make it easier to test
+	public int[] getStats(boolean firstBoard) {
+		// if firstBoard, then get stats of the user of the first board
+		// (which is the board on the left). 
+		// However, stats are stored on other board, therefore curBoard is opposite
+		Board curBoard = firstBoard ? b : a;
+		
+		// returns { shipsSunk, guessesMade, misses, hits }
+		int hits = curBoard.getHits();
+		int misses = curBoard.getMisses();
+		
+		return new int[] { curBoard.getSunkShips(), (hits + misses), misses, hits };
+	}
 	
 	public Ship nextShip(boolean isPlayer1) {
 		if (isPlayer1 == isAI) {
@@ -63,14 +73,19 @@ public class BattleshipGame {
 	}
 	
 	public boolean humanPlayMove(boolean isPlayer1, int x, int y) {
+		boolean playing;
 		if (isPlayer1) {
-			return player1.playMove(x, y);
+			// playMove checks is move is valid before playing
+			playing = player1.playMove(x, y);
 		} else {
-			return player2.playMove(x, y);
+			playing = player2.playMove(x, y);
 		}
+		
+		return playing;
 	}
 	
 	public void computerPlayMove() {
+		// guess will play move; this assumes move is valid
 		int[] guess = strategyAI.desiredMove(b);
 		b.guess(guess[0], guess[1]);
 	}

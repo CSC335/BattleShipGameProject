@@ -4,6 +4,9 @@ public class Board {
 	public int shipsPlaced = 0;
 	final static int TOTAL_SHIPS = 5;
 	
+	private int hits = 0;
+	private int misses = 0;
+	
 	Ships ships;
 	Square[][] squareBoard;
 	
@@ -35,12 +38,32 @@ public class Board {
 	public boolean guess(int x, int y) {
 		//player can make a move
 		if(!guessedBoard[x][y]) {
-			squareBoard[x][y].guess();
+			// if ship is hit
+			if (squareBoard[x][y].guess()) {
+				hits++;
+				GUI.playExplosion();
+				System.out.println("increasing hits to " + hits);
+			} else {
+				misses++;
+				System.out.println("increasing misses to " + misses);
+			}
 			guessedBoard[x][y] = true;
 			return true;
 		}else {
 			return false;
 		}
+	}
+	
+	public int getSunkShips() {
+		return ships.getSunkShips();
+	}
+	
+	public int getHits() {
+		return hits;
+	}
+	
+	public int getMisses() {
+		return misses;
 	}
 	
 	// returns null if all ships are placed; 

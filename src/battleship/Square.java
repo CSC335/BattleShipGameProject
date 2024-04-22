@@ -19,11 +19,14 @@ public class Square {
 		ship = s;
 	}
 	
-	public void guess() {
+	// returns true if a ship is hit, and false otherwise
+	public boolean guess() {
 		guessed = true;
 		if(ship != null) {
 			ship.guess();
+			return true;
 		}
+		return false;
 	}
 	
 	//tbh i forgot which chars we were using, might need to be updated
