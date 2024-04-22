@@ -20,7 +20,7 @@ public class BattleshipGame {
 		if (isAI) {
 			// AI on left, player on right
 			player1 = new Player(b, a);
-			strategyAI = new RandomAI();
+			strategyAI = new Ai();
 		} else {
 			// player1 on left, player2 on right
 			player1 = new Player(a, b);
