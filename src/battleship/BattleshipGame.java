@@ -126,13 +126,9 @@ public class BattleshipGame {
 	}
 	
 	public void getRandomPlace() {
-		Random generator = new Random();
-		// Process the guess based on xInput and yInput values
-		int curSize = this.nextShip(true).size();
-		int xValue = generator.nextInt(10 - curSize);
-		int yValue = generator.nextInt(10 - curSize);
-		int rotValue = generator.nextInt(2);
-		
-			
+		while (!b.addShip(new RandomAI().desiredShip(b, b.getNextShip()), b.getNextShip())) {
+			System.out.println("rerolling ship");
+		}
+		b.shipsPlaced++;
 	}
 }

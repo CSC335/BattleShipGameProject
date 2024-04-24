@@ -303,6 +303,12 @@ public class GUI extends Application {
 			randomPlaceButton.setOnAction(event -> {
 				// call addShip() function to update board
 				game.getRandomPlace();
+				printBoard(true);
+				printBoard(false);
+				if (game.nextShip(isPlayer1) == null)
+					setInputGrid(true);
+				else
+					shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
 			});
 
 			// Create a GridPane to hold the xInput, yInput, and guessButton
@@ -332,41 +338,6 @@ public class GUI extends Application {
 
 			root.setBottom(inputGrid);
 		}
-	}
-
-	private static void addRandomShip(Label shipSize) {
-		int curSize, xValue, yValue, rotValue;
-
-		Random generator = new Random();
-
-		// Process the guess based on xInput and yInput values
-		curSize = game.nextShip(isPlayer1).size();
-		xValue = generator.nextInt(10 - curSize);
-		yValue = generator.nextInt(10 - curSize);
-		rotValue = generator.nextInt(2);
-
-		// Perform the game logic for the guess
-		System.out.println(
-				"Player " + (isPlayer1 ? "1" : "2") + " place: (" + xValue + ", " + yValue + "," + rotValue + ")");
-
-		// does nothing else (may put up alerts tho) if move is invalid
-		if (!game.humanPlaceShip(isPlayer1, xValue, yValue, rotValue, game.nextShip(isPlayer1)))
-			return;
-
-		printBoard(false);
-		printBoard(true);
-
-		// plays AI move or switches to next player
-		if (game.isAI) {
-			game.computerPlaceShip(true);
-			printBoard(true);
-		} else
-			isPlayer1 = !isPlayer1;
-		System.out.println(game.nextShip(isPlayer1));
-		if (game.nextShip(isPlayer1) == null)
-			setInputGrid(true);
-		else
-			shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
 	}
 
 	private static void addShip(TextField xInput, TextField yInput, TextField orientation, Label shipSize) {
