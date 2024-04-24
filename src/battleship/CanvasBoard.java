@@ -37,7 +37,7 @@ public class CanvasBoard extends Application{
 		for(int i = 0; i < 5; i++) {
 			shipsList.add(board.ships.shipObjs[i]);
 		}
-		canvasView.updateBoard(board, shipsList);
+		canvasView.updateBoard(board);
 		Random rand = new Random();
 		for(int i = 0; i < 20; i++) {
 			board.guess(rand.nextInt(10), rand.nextInt(10));
@@ -62,7 +62,7 @@ public class CanvasBoard extends Application{
 //		gc.drawImage(ship2, 0, 36);
 //		gc.drawImage(ship3, 0, 108);
 //		gc.drawImage(ship4, 0, 144);
-		canvasView.updateBoard(board, shipsList);
+		canvasView.updateBoard(board);
 		gp.add(canvasView, 0, 0);
 		stage.setScene(scene);
 		stage.show();

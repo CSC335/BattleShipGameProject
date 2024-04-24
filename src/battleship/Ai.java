@@ -9,10 +9,13 @@ public class Ai implements BattleShipStrategy {
 	@Override
 	public int[][] desiredShip(Board b, Ship ship) {
 		int[][] cur = null;
+		int ori = 0;
 		while (cur == null) {
+			ori = generator.nextInt();
 			cur = ShipInfoToArray(generator.nextInt(10 - ship.size()), generator.nextInt(10 - ship.size()),
-					generator.nextInt(2), ship.size());
+					ori, ship.size());
 		}
+		ship.setOrientation(ori);
 		return cur;
 	}
 

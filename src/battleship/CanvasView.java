@@ -27,10 +27,10 @@ public class CanvasView extends BorderPane{
 		this.setCenter(canvas);
 	}
 	
-	public void updateBoard(Board board, ArrayList<Ship> ships) {
+	public void updateBoard(Board board) {
 		gc.clearRect(0, 0, 360, 360);
 		makeBackground();
-		makeShips(ships);
+		makeShips(board.placedShips);
 		makeShots(board);
 	}
 	
@@ -59,7 +59,9 @@ public class CanvasView extends BorderPane{
 			curr = ships.get(i);
 			if(player || curr.isSunk()) {
 				squares = curr.squares();
-				if(curr.orientation() == 0) {
+				System.out.println(squares.toString());
+				if(curr.orientation() % 2 == 0) {
+					System.out.println(0);
 					minI = 9;
 					for(int j = 0; j < curr.size(); j++) {
 						currI = squares.get(j).y;
@@ -72,6 +74,7 @@ public class CanvasView extends BorderPane{
 					System.out.println("Drew img: " + curr.type + " : " + String.valueOf(squares.get(0).x)
 					 + " : " + String.valueOf(minI * 36));
 				}else {
+					System.out.println("1");
 					minI = 9;
 					for(int j = 0; j < curr.size(); j++) {
 						currI = squares.get(j).x;

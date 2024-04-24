@@ -57,8 +57,10 @@ public class GUI extends Application {
 
 	static BattleshipGame game;
 
-	static TextArea firstBoardArea = new TextArea();
-	static TextArea secondBoardArea = new TextArea();
+	//static TextArea firstBoardArea = new TextArea();
+	//static TextArea secondBoardArea = new TextArea();
+	static CanvasView firstBoardA = new CanvasView();
+	static CanvasView secondBoardA = new CanvasView();
 
 	private static boolean isPlayer1 = true;
 
@@ -166,17 +168,17 @@ public class GUI extends Application {
 		game = new BattleshipGame(whichAI);
 
 //		opponentArea.setAlignment(Pos.CENTER);
-		firstBoardArea.setEditable(false); // Set to read-only
-		firstBoardArea.setMaxWidth(360);
-		firstBoardArea.setMaxHeight(368);
-		// secondBoardArea.setWrapText(true);
-		firstBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
-
-		secondBoardArea.setEditable(false); // Set to read-only
-		secondBoardArea.setMaxWidth(360);
-		secondBoardArea.setMaxHeight(368);
-		// firstBoardArea.setWrapText(true);
-		secondBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
+//		firstBoardArea.setEditable(false); // Set to read-only
+//		firstBoardArea.setMaxWidth(360);
+//		firstBoardArea.setMaxHeight(368);
+//		// secondBoardArea.setWrapText(true);
+//		firstBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
+//
+//		secondBoardArea.setEditable(false); // Set to read-only
+//		secondBoardArea.setMaxWidth(360);
+//		secondBoardArea.setMaxHeight(368);
+//		// firstBoardArea.setWrapText(true);
+//		secondBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
 
 		// Determine board labels based on isAI flag
 		Label leftLabel, rightLabel;
@@ -204,8 +206,9 @@ public class GUI extends Application {
 		root = new BorderPane();
 		root.setPadding(new Insets(40));
 		root.setTop(labelBox);
-		root.setLeft(firstBoardArea);
-		root.setRight(secondBoardArea);
+		root.setLeft(firstBoardA);
+		firstBoardA.setPlayer(false);
+		root.setRight(secondBoardA);
 
 		// set input grid in add ships mode
 		setInputGrid(false);
@@ -385,9 +388,11 @@ public class GUI extends Application {
 
 	private static void printBoard(boolean firstBoard) {
 		if (firstBoard) {
-			firstBoardArea.setText(game.getBoard(firstBoard));
+			//firstBoardArea.setText(game.getBoard(firstBoard));
+			firstBoardA.updateBoard(game.getActualBoard(firstBoard));
 		} else {
-			secondBoardArea.setText(game.getBoard(firstBoard));
+			//secondBoardArea.setText(game.getBoard(firstBoard));
+			secondBoardA.updateBoard(game.getActualBoard(firstBoard));
 		}
 	}
 

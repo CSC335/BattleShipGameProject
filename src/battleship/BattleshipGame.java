@@ -1,5 +1,6 @@
 package battleship;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BattleshipGame {
@@ -77,6 +78,22 @@ public class BattleshipGame {
 		}
 	}
 	
+	public ArrayList<Ship> getShips(boolean first) {
+		ArrayList<Ship> ships = new ArrayList<Ship>();
+		if(first) {
+			if(this.isAI) {
+				for(int i = 0; i < 5; i++) {
+					ships.add(a.ships.shipObjs[i]);
+				}
+				return ships;
+			}else {
+				return player1.ships;
+			}
+		}else {
+			return player2.ships;
+		}
+	}
+	
 	public void computerPlaceShip(boolean board1) {
 		Board a = board1 ? this.a : b;
 		while (!a.addShip(strategyAI.desiredShip(a, a.getNextShip()), a.getNextShip())) {
@@ -101,6 +118,14 @@ public class BattleshipGame {
 		// guess will play move; this assumes move is valid
 		int[] guess = strategyAI.desiredMove(b);
 		b.guess(guess[0], guess[1]);
+	}
+	
+	public Board getActualBoard(boolean firstBoard) {
+		if(firstBoard) {
+			return a;
+		}else {
+			return b;
+		}
 	}
 	
 	public String getBoard(boolean firstBoard) {

@@ -13,7 +13,7 @@ public class Player {
 	private final int BOARD_SIZE = 10;
 
 	// ships is an arrayList for flexibility (like adding ships midgame)
-	private ArrayList<Ship> ships;
+	public ArrayList<Ship> ships;
 
 	// Player initializer
 	public Player(Board myBoard, Board oppBoard) {
@@ -73,11 +73,11 @@ public class Player {
 	 * # cells that the ship takes up
 	 */
 	public boolean ShipAdd(int x, int y, int orientation, Ship ship) {
-
+		ship.setOrientation(orientation);
 		// Ex. ShipInfoToArray(5, 5, 2, 3) returns
 		// new int[][] {{5, 5}, {5, 4}, {5, 3}}
 		int[][] shipArr = ShipInfoToArray(x, y, orientation, ship.size());
-
+		
 		for (int[] point : shipArr) {
 			// return false if outside of board bounds.
 			if (point[0] < 0 || point[0] >= BOARD_SIZE || point[1] < 0 || point[1] >= BOARD_SIZE) {

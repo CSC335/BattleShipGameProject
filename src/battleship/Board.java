@@ -1,5 +1,7 @@
 package battleship;
 
+import java.util.ArrayList;
+
 public class Board {
 	public int shipsPlaced = 0;
 	final static int TOTAL_SHIPS = 5;
@@ -8,6 +10,7 @@ public class Board {
 	private int misses = 0;
 	
 	Ships ships;
+	ArrayList<Ship> placedShips;
 	Square[][] squareBoard;
 	
 	// I implemented it in a way that doesn't need guessBoard 
@@ -33,6 +36,7 @@ public class Board {
 		}
 		player = p;
 		isOver = false;
+		placedShips = new ArrayList<Ship>();
 	}
 	
 	public boolean guess(int x, int y) {
@@ -105,6 +109,7 @@ public class Board {
 		for (int[] point : shipArr) {
 			placeSq(point[0], point[1], ship);
 		}
+		placedShips.add(ship);
 		return true;
 		
 	}
@@ -139,6 +144,9 @@ public class Board {
 	
 	public void makeTest() {
 		Ship[] shipObjs = ships.getShips();
+		for(int i = 0; i < 5; i++) {
+			placedShips.add(shipObjs[i]);
+		}
 		Ship currShip = shipObjs[0];
 		for(int i = 0; i < 5; i++) {
 			squareBoard[9][i].place(currShip);
