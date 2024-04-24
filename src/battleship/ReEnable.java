@@ -2,13 +2,15 @@ package battleship;
 
 public class ReEnable extends Skill{
 
-	public ReEnable() {
-		super();
+	public ReEnable(Board myBoard, Board oppBoard) {
+		super(myBoard, oppBoard);
 	}
 	
-	@Override
-	public void ExecuteSkill() {
-		// TODO Auto-generated method stub
+	public void ExecuteSkill(Skill skill) {
+		if (!enabled)
+			return;
+
+		enabled = false;
 	}
 
 }

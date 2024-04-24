@@ -2,14 +2,15 @@ package battleship;
 
 public class MoveShip extends Skill {
 
-	public MoveShip() {
-		super();
+	public MoveShip(Board myBoard, Board oppBoard) {
+		super(myBoard, oppBoard);
 	}
 	
-	@Override
-	public void ExecuteSkill() {
-		// TODO Auto-generated method stub
+	public void ExecuteSkill(Ship ship, int offset, boolean vertically) {
+		if (!enabled)
+			return;
 		
+		enabled = false;
 	}
 	
 }

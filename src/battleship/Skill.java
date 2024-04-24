@@ -1,9 +1,13 @@
 package battleship;
 
 public abstract class Skill {
-	private boolean enabled;
+	protected boolean enabled;
+	protected Board myBoard, oppBoard;
 	
-	public Skill() {
+	
+	public Skill(Board myBoard, Board oppBoard) {
+		this.myBoard = myBoard;
+		this.oppBoard = oppBoard;
 		this.enabled = true;
 	}
 	
@@ -15,5 +19,10 @@ public abstract class Skill {
 		return enabled;
 	}
 	
-	public abstract void ExecuteSkill();
+	private Ship getShipFromCoords(int x, int y, Board board) {
+		Ship curShip = null;
+		
+		
+		return curShip;
+	}
 }
