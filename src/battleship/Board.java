@@ -77,6 +77,10 @@ public class Board {
 		}
 	}
 	
+	public Square getSquare(int x, int y) {
+		return squareBoard[x][y];
+	}
+	
 	// Adds a ship to the board. To be called by player/AI
 	// shipArr is in the format of { {x1, y1}, {x2, y2}, ...  }
 	public boolean addShip(int[][] shipArr, Ship ship) {
@@ -139,22 +143,27 @@ public class Board {
 		for(int i = 0; i < 5; i++) {
 			squareBoard[9][i].place(currShip);
 		}
+		currShip.setOrientation(0);
 		currShip = shipObjs[1];
 		for(int i = 3; i < 7; i++) {
 			squareBoard[i][8].place(currShip);
 		}
+		currShip.setOrientation(1);
 		currShip = shipObjs[2];
 		for(int i = 1; i < 4; i++) {
 			squareBoard[i][0].place(currShip);
 		}
+		currShip.setOrientation(1);
 		currShip = shipObjs[3];
 		for(int i = 3; i < 6; i++) {
 			squareBoard[6][i].place(currShip);
 		}
+		currShip.setOrientation(0);
 		currShip = shipObjs[4];
 		for(int i = 7; i < 9; i++) {
 			squareBoard[0][i].place(currShip);
 		}
+		currShip.setOrientation(0);
 	}
 	
 	public boolean[][] getGuessed(){

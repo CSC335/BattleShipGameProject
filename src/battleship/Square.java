@@ -5,8 +5,8 @@ public class Square {
 	
 	int x;
 	int y;
-	boolean guessed;
-	Ship ship;
+	public boolean guessed;
+	public Ship ship;
 	
 	public Square(int xNew, int yNew) {
 		x = xNew;
@@ -17,6 +17,11 @@ public class Square {
 	
 	public void place(Ship s) {
 		ship = s;
+		s.addSquare(this);
+	}
+	
+	public void unplace() {
+		ship = null;
 	}
 	
 	// returns true if a ship is hit, and false otherwise

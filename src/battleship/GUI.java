@@ -65,7 +65,8 @@ public class GUI extends Application {
 	static BorderPane root;
 
 	private static Stage primaryStage;
-	private MediaPlayer mediaPlayer;
+	private static MediaPlayer songPlayer;
+	private static MediaPlayer effectsPlayer;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -562,10 +563,10 @@ public class GUI extends Application {
 		File file = new File(str);
 		URI uri = file.toURI();
 		Media media = new Media(uri.toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		songPlayer = new MediaPlayer(media);
 		// mediaPlayer.setOnEndOfMedia(new Waiter());
-		mediaPlayer.setAutoPlay(true);
-		mediaPlayer.play();
+		songPlayer.setAutoPlay(true);
+		songPlayer.play();
 
 	}
 
@@ -576,10 +577,10 @@ public class GUI extends Application {
 		File file = new File(str);
 		URI uri = file.toURI();
 		Media media = new Media(uri.toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		songPlayer = new MediaPlayer(media);
 		// mediaPlayer.setOnEndOfMedia(new Waiter());
-		mediaPlayer.setAutoPlay(true);
-		mediaPlayer.play();
+		songPlayer.setAutoPlay(true);
+		songPlayer.play();
 
 	}
 
@@ -590,10 +591,10 @@ public class GUI extends Application {
 		File file = new File(str);
 		URI uri = file.toURI();
 		Media media = new Media(uri.toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		effectsPlayer = new MediaPlayer(media);
 		// mediaPlayer.setOnEndOfMedia(new Waiter());
-		mediaPlayer.setAutoPlay(true);
-		mediaPlayer.play();
+		effectsPlayer.setAutoPlay(true);
+		effectsPlayer.play();
 
 	}
 
