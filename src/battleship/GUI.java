@@ -394,6 +394,8 @@ public class GUI extends Application {
 			//secondBoardArea.setText(game.getBoard(firstBoard));
 			secondBoardA.updateBoard(game.getActualBoard(firstBoard));
 		}
+		game.getBoard(true);
+		game.getBoard(false);
 	}
 
 	private static void playMove(TextField xInput, TextField yInput) {

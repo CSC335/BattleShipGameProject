@@ -109,6 +109,13 @@ public class Board {
 		for (int[] point : shipArr) {
 			placeSq(point[0], point[1], ship);
 		}
+		
+		// both x values the same; therefore, it is vertical
+		if (shipArr[0][0] == shipArr[1][0]) {
+			ship.setOrientation(0);
+		} else {
+			ship.setOrientation(1);
+		}
 		placedShips.add(ship);
 		return true;
 		
