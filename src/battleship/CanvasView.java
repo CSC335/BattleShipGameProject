@@ -16,14 +16,24 @@ public class CanvasView extends BorderPane{
 	private Image hitImg;
 	private Image missImg;
 	private Image sunkImg;
+	//private GUI gui;
+	public int x;
+	public int y;
 	
 	public CanvasView() {
 		canvas = new Canvas(360, 360);
 		gc = canvas.getGraphicsContext2D();
 		player = true;
+		//gui = g;
 		hitImg = new Image("file:Images/hit5.png", 36, 36, false, false);
 		missImg = new Image("file:Images/miss.png", 36, 36, false, false);
 		sunkImg = new Image("file:Images/sunk.png", 36, 36, false, false);
+		canvas.setOnMousePressed(event->{
+			x = (int) event.getSceneX();
+			y = (int) event.getSceneY();
+			x = x / 36;
+			y = y / 36;
+		});
 		this.setCenter(canvas);
 	}
 	

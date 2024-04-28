@@ -66,7 +66,8 @@ public class TutorialScreen extends Application {
 				tutorial.setFont(Font.font("Impact", 60));
 			}});
 		done.setOnAction(event->{
-			javafx.application.Platform.exit();
+			//javafx.application.Platform.exit();
+			stage.close();
 		});
 		howTo.add(instructions, 0, 0);
 		howTo.setAlignment(Pos.CENTER);

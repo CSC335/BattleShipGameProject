@@ -314,7 +314,19 @@ public class GUI extends Application {
 				else
 					shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
 			});
-
+			Button tutorialButton = new Button("Tutorial");
+			tutorialButton.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
+					+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
+			tutorialButton.setOnAction(event->{
+				TutorialScreen tutorialScreen = new TutorialScreen();
+				try {
+					tutorialScreen.start(new Stage());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			
 			// Create a GridPane to hold the xInput, yInput, and guessButton
 			inputGrid.setHgap(10);
 			inputGrid.setVgap(5);
@@ -324,6 +336,7 @@ public class GUI extends Application {
 			inputGrid.add(shipSize, 2, 0, 1, 1);
 			inputGrid.add(placeButton, 2, 1, 1, 3);
 			inputGrid.add(randomPlaceButton, 4, 1, 1, 3);
+			inputGrid.add(tutorialButton, 4, 0, 3, 1);
 
 			// ------------------------debug code-----------------------
 			// TODO: delete this when it is no longer necessary
