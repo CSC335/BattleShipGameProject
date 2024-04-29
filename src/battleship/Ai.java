@@ -87,7 +87,7 @@ public class Ai implements BattleShipStrategy {
 	        	char nextPlusSquare = b.getSqState(upperX, rightY, true);
 	        	
 	        	// Check if this square is possible boat place
-	        	if (nextPlusSquare != 'X' && nextPlusSquare != '.' && Character.isUpperCase(nextPlusSquare)) {
+	        	if (nextPlusSquare != 'X' && !Character.isLowerCase(nextPlusSquare)) {
 	        		target[0] = upperX;
 	        		target[1] = rightY;
 	        		return target;
