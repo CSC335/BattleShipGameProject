@@ -17,14 +17,6 @@ public class Ships {
 		board = b;
 	}
 	
-	public void update() {
-		if(shipObjs[0].isSunk() && shipObjs[1].isSunk() && shipObjs[2].isSunk() && 
-				shipObjs[3].isSunk() && shipObjs[4].isSunk()) {
-			allSunk = true;
-			board.gameOver();
-		}
-	}
-	
 	public int getSunkShips() {
 		int count = 0;
 		for (Ship ship : shipObjs) {

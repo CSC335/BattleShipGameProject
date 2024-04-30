@@ -36,7 +36,7 @@ public class Player {
 	private int[][] ShipInfoToArray(int y, int x, int orientation, int size) {
 		if (orientation < 0 || orientation > 4) {
 			// TODO: output exception if necessary
-			System.out.println("Player.ShipAdd() orientation out of bounds.");
+			System.out.println("Player.ShipAdd() orientation out of bounds: " + orientation);
 			return null;
 		}
 
@@ -73,6 +73,7 @@ public class Player {
 	 * # cells that the ship takes up
 	 */
 	public boolean ShipAdd(int x, int y, int orientation, Ship ship) {
+		System.out.println(orientation);
 		ship.setOrientation(orientation);
 		// Ex. ShipInfoToArray(5, 5, 2, 3) returns
 		// new int[][] {{5, 5}, {5, 4}, {5, 3}}

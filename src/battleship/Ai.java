@@ -11,7 +11,7 @@ public class Ai implements BattleShipStrategy {
 		int[][] cur = null;
 		int ori = 0;
 		while (cur == null) {
-			ori = generator.nextInt();
+			ori = generator.nextInt(2);
 			cur = ShipInfoToArray(generator.nextInt(10 - ship.size()), generator.nextInt(10 - ship.size()),
 					ori, ship.size());
 		}

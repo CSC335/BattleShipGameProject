@@ -11,9 +11,6 @@ public class BattleshipGame {
 	
 	public boolean isAI;
 	
-	public int b1Hits = 0, b1Misses = 0;
-	public int b2Hits = 0, b2Misses = 0;
-	
 	public BattleshipGame(String whichAI) {
 		// check if it is random or hard ai right now
 		if(whichAI == "random" || whichAI == "hard") {
@@ -68,6 +65,25 @@ public class BattleshipGame {
 		} else {
 			return a.getNextShip();
 		}
+	}
+	
+	public boolean ExecuteSkillShot(boolean fromFirstBoard, int skillIndex, int x, int y) {
+		Board curBoard = b;
+		Board oppBoard = a;
+		if (fromFirstBoard) {
+			curBoard = a;
+			oppBoard = b;
+		}
+		
+		int[][] shots = curBoard.getSkillShot(skillIndex, x, y);
+		if (shots == null)
+			return false;
+		
+		for (var coord : shots) {
+			oppBoard.guess(coord[0], coord[1]);
+		}
+		
+		return true;
 	}
 	
 	public boolean humanPlaceShip(boolean isPlayer1, int x, int y, int orientation, Ship ship) {
@@ -128,12 +144,12 @@ public class BattleshipGame {
 		}
 	}
 	
-	public String getBoard(boolean firstBoard) {
-		Board cur = firstBoard ? a : b;
+	public String getBoard(boolean isFirstBoard) {
+		Board cur = isFirstBoard ? a : b;
 		char[][] boardChars = cur.getCharBoard();
 		StringBuilder boardString = new StringBuilder();
 		
-		System.out.println("Board " + (firstBoard ? "1" : "2") + ": ");
+		System.out.println("Board " + (isFirstBoard ? "1" : "2") + ": ");
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				boardString.append(boardChars[i][j]).append(" ");

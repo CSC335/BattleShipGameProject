@@ -57,8 +57,15 @@ public class GUI extends Application {
 
 	static BattleshipGame game;
 
-	//static TextArea firstBoardArea = new TextArea();
-	//static TextArea secondBoardArea = new TextArea();
+	
+	static ToggleGroup skillShots = new ToggleGroup();
+	static RadioButton skillShot0 = new RadioButton("row");
+	static RadioButton skillShot1 = new RadioButton("col");
+	static RadioButton skillShot2 = new RadioButton("3x3");
+	static RadioButton skillShot3 = new RadioButton("normal (default)");
+	
+	// static TextArea firstBoardArea = new TextArea();
+	// static TextArea secondBoardArea = new TextArea();
 	static CanvasView firstBoardA = new CanvasView();
 	static CanvasView secondBoardA = new CanvasView();
 
@@ -111,32 +118,18 @@ public class GUI extends Application {
 				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
 						+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
 		startButton.setOnAction(event -> {
+			fun = funMusic.isSelected();
 			if (randomAiRadioButton.isSelected()) {
 				// Start AI game
 				System.out.println("Starting random AI game...");
-				if (funMusic.isSelected()) {
-					fun = true;
-				} else {
-					fun = false;
-				}
 				startGame(primaryStage, "random");
 			} else if (hardAiRadioButton.isSelected()) {
 				// Start AI game
 				System.out.println("Starting hard AI game...");
-				if (funMusic.isSelected()) {
-					fun = true;
-				} else {
-					fun = false;
-				}
 				startGame(primaryStage, "hard");
 			} else if (players2RadioButton.isSelected()) {
 				// Start 2 players game
 				System.out.println("Starting 2 players game...");
-				if (funMusic.isSelected()) {
-					fun = true;
-				} else {
-					fun = false;
-				}
 				startGame(primaryStage, "notAI");
 			} else {
 				// No game mode selected
@@ -167,22 +160,9 @@ public class GUI extends Application {
 	public static void startGame(Stage primaryStage, String whichAI) {
 		game = new BattleshipGame(whichAI);
 
-//		opponentArea.setAlignment(Pos.CENTER);
-//		firstBoardArea.setEditable(false); // Set to read-only
-//		firstBoardArea.setMaxWidth(360);
-//		firstBoardArea.setMaxHeight(368);
-//		// secondBoardArea.setWrapText(true);
-//		firstBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
-//
-//		secondBoardArea.setEditable(false); // Set to read-only
-//		secondBoardArea.setMaxWidth(360);
-//		secondBoardArea.setMaxHeight(368);
-//		// firstBoardArea.setWrapText(true);
-//		secondBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
-
 		// Determine board labels based on isAI flag
 		Label leftLabel, rightLabel;
-		if ((String) whichAI == "random" || (String) whichAI == "hard") {
+		if (whichAI.equals("random") || whichAI.equals("hard")) {
 			leftLabel = new Label("AI Board");
 			rightLabel = new Label("Your Board");
 		} else {
@@ -211,13 +191,13 @@ public class GUI extends Application {
 		root.setRight(secondBoardA);
 
 		// set input grid in add ships mode
-		setInputGrid(false);
+		setShipInputGrid();
+
 		// Set up the scene
 		Scene scene = new Scene(root, 860, 630);
 
 		// prints both boards
-		printBoard(true);
-		printBoard(false);
+		printBoards();
 
 		// play song
 		if (fun == true) {
@@ -232,129 +212,164 @@ public class GUI extends Application {
 		primaryStage.show();
 	}
 
-	private static void setInputGrid(boolean fireMode) {
-		if (fireMode) {
-			GridPane inputGrid = new GridPane();
-			// Create input fields for x and y coordinates
-			TextField xInput = new TextField();
-			TextField yInput = new TextField();
+	private static void setShipInputGrid() {
+		// TODO: I'm bad at writing UI :(
+		// TODO: the bad UI code is all in this else statement
 
-			// Create Guess button
-			Button guessButton = new Button("G u e s s");
-			guessButton.setStyle(
-					"-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
-							+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
-			guessButton.setOnAction(event -> {
-				// call userGuess() function to update board
-				playMove(xInput, yInput);
-			});
+		GridPane inputGrid = new GridPane();
 
-			// Create a GridPane to hold the xInput, yInput, and guessButton
-			inputGrid.setHgap(10);
-			inputGrid.setVgap(5);
-			inputGrid.addRow(0, new Label("X:"), xInput);
-			inputGrid.addRow(1, new Label("Y:"), yInput);
-			inputGrid.add(guessButton, 2, 0, 1, 2);
+		// Create input fields for x and y coordinates
+		TextField xInput = new TextField();
+		TextField yInput = new TextField();
+		TextField orientation = new TextField();
+		Ship nextShip = game.nextShip(isPlayer1);
 
-			// ------------------------debug code-----------------------
-			// TODO: delete this when it is no longer necessary
-			Button debugButton = new Button("Debug: end game now");
-			debugButton.setOnAction(event -> {
-				try {
-					startGameOver();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			});
-			inputGrid.add(debugButton, 3, 0, 1, 1);
-			// ------------------------debug code-----------------------
+		if (nextShip == null)
+			setGuessInputGrid();
 
-			inputGrid.setAlignment(Pos.CENTER);
+		Label shipSize = new Label("Size:" + nextShip.size());
 
-			root.setBottom(inputGrid);
-		} else {
-			// TODO: I'm bad at writing UI :(
-			// TODO: the bad UI code is all in this else statement
+		// Create Place button
+		Button placeButton = new Button("P l a c e");
+		placeButton
+				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
+						+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
+		placeButton.setOnAction(event -> {
+			// call addShip() function to update board
+			addShip(xInput, yInput, orientation, shipSize);
+		});
 
-			GridPane inputGrid = new GridPane();
+		// Create Place button
+		Button randomPlaceButton = new Button("R a n d o m    P l a c e");
+		randomPlaceButton
+				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
+						+ "-fx-pref-width: 160px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
+		randomPlaceButton.setOnAction(event -> {
+			// call addShip() function to update board
+			game.getRandomPlace();
+			printBoards();
+			if (game.nextShip(isPlayer1) == null)
+				setGuessInputGrid();
+			else
+				shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
+		
 
-			// Create input fields for x and y coordinates
-			TextField xInput = new TextField();
-			TextField yInput = new TextField();
-			TextField orientation = new TextField();
-			Ship nextShip = game.nextShip(isPlayer1);
+			printBoards();
 
-			if (nextShip == null)
-				setInputGrid(true);
+			xInput.clear();
+			yInput.clear();
+			orientation.clear();
 
-			Label shipSize = new Label("Size:" + nextShip.size());
+			// plays AI move or switches to next player
+			if (game.isAI) {
+				game.computerPlaceShip(true);
+				printBoards();
+			} else
+				isPlayer1 = !isPlayer1;
+			System.out.println(game.nextShip(isPlayer1));
+			if (game.nextShip(isPlayer1) == null)
+				setGuessInputGrid();
+			else
+				shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
+		});
+		Button tutorialButton = new Button("Tutorial");
+		tutorialButton
+				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
+						+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
+		tutorialButton.setOnAction(event -> {
+			TutorialScreen tutorialScreen = new TutorialScreen();
+			try {
+				tutorialScreen.start(new Stage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
-			// Create Place button
-			Button placeButton = new Button("P l a c e");
-			placeButton.setStyle(
-					"-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
-							+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
-			placeButton.setOnAction(event -> {
-				// call addShip() function to update board
-				addShip(xInput, yInput, orientation, shipSize);
-			});
+		// Create a GridPane to hold the xInput, yInput, and guessButton
+		inputGrid.setHgap(10);
+		inputGrid.setVgap(5);
+		inputGrid.addRow(0, new Label("X:"), xInput);
+		inputGrid.addRow(1, new Label("Y:"), yInput);
+		inputGrid.addRow(2, new Label("rot (0,1,2,3):"), orientation);
+		inputGrid.add(shipSize, 2, 0, 1, 1);
+		inputGrid.add(placeButton, 2, 1, 1, 3);
+		inputGrid.add(randomPlaceButton, 4, 1, 1, 3);
+		inputGrid.add(tutorialButton, 4, 0, 3, 1);
 
-			// Create Place button
-			Button randomPlaceButton = new Button("R a n d o m    P l a c e");
-			randomPlaceButton.setStyle(
-					"-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
-							+ "-fx-pref-width: 160px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
-			randomPlaceButton.setOnAction(event -> {
-				// call addShip() function to update board
-				game.getRandomPlace();
-				printBoard(true);
-				printBoard(false);
-				if (game.nextShip(isPlayer1) == null)
-					setInputGrid(true);
-				else
-					shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
-			});
-			Button tutorialButton = new Button("Tutorial");
-			tutorialButton.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
-					+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
-			tutorialButton.setOnAction(event->{
-				TutorialScreen tutorialScreen = new TutorialScreen();
-				try {
-					tutorialScreen.start(new Stage());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
-			
-			// Create a GridPane to hold the xInput, yInput, and guessButton
-			inputGrid.setHgap(10);
-			inputGrid.setVgap(5);
-			inputGrid.addRow(0, new Label("X:"), xInput);
-			inputGrid.addRow(1, new Label("Y:"), yInput);
-			inputGrid.addRow(2, new Label("rot (0,1,2,3):"), orientation);
-			inputGrid.add(shipSize, 2, 0, 1, 1);
-			inputGrid.add(placeButton, 2, 1, 1, 3);
-			inputGrid.add(randomPlaceButton, 4, 1, 1, 3);
-			inputGrid.add(tutorialButton, 4, 0, 3, 1);
+		// ------------------------debug code-----------------------
+		// TODO: delete this when it is no longer necessary
+		Button debugButton = new Button("Debug: end game now");
+		debugButton.setOnAction(event -> {
+			try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		inputGrid.add(debugButton, 3, 0, 1, 1);
+		// ------------------------debug code-----------------------
 
-			// ------------------------debug code-----------------------
-			// TODO: delete this when it is no longer necessary
-			Button debugButton = new Button("Debug: end game now");
-			debugButton.setOnAction(event -> {
-				try {
-					startGameOver();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			});
-			inputGrid.add(debugButton, 3, 0, 1, 1);
-			// ------------------------debug code-----------------------
+		inputGrid.setAlignment(Pos.CENTER);
 
-			inputGrid.setAlignment(Pos.CENTER);
+		root.setBottom(inputGrid);
+	}
 
-			root.setBottom(inputGrid);
-		}
+	private static void setGuessInputGrid() {
+		GridPane inputGrid = new GridPane();
+		// Create input fields for x and y coordinates
+		TextField xInput = new TextField();
+		TextField yInput = new TextField();
+
+		// Create Guess button
+		Button guessButton = new Button("G u e s s");
+		guessButton
+				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 14px; "
+						+ "-fx-pref-width: 80px; " + "-fx-pref-height: 32px;" + "-fx-font-family: Impact");
+		guessButton.setOnAction(event -> {
+			// call userGuess() function to update board
+			playMove(xInput, yInput);
+		});
+
+		// Create a GridPane to hold the xInput, yInput, and guessButton
+		inputGrid.setHgap(10);
+		inputGrid.setVgap(5);
+		inputGrid.addRow(0, new Label("X:"), xInput);
+		inputGrid.addRow(1, new Label("Y:"), yInput);
+		inputGrid.add(guessButton, 2, 0, 1, 2);
+
+		// ------------------------debug code-----------------------
+		// TODO: delete this when it is no longer necessary
+		Button debugButton = new Button("Debug: end game now");
+		debugButton.setOnAction(event -> {
+			try {
+				startGameOver();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		inputGrid.add(debugButton, 3, 0, 1, 1);
+		// ------------------------debug code-----------------------
+		
+		
+		skillShot0.setToggleGroup(skillShots);
+		skillShot1.setToggleGroup(skillShots);
+		skillShot2.setToggleGroup(skillShots);
+		skillShot3.setToggleGroup(skillShots);
+		
+		//skillShot1
+		//		.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		//skillShot2
+		//		.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		//skillShot3
+		//		.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		
+		inputGrid.setAlignment(Pos.CENTER);
+		inputGrid.add(skillShot0, 0, 4, 1, 1);
+		inputGrid.add(skillShot1, 1, 4, 1, 1);
+		inputGrid.add(skillShot2, 2, 4, 1, 1);
+		inputGrid.add(skillShot3, 3, 4, 1, 1);
+		root.setBottom(inputGrid);
 	}
 
 	private static void addShip(TextField xInput, TextField yInput, TextField orientation, Label shipSize) {
@@ -362,9 +377,9 @@ public class GUI extends Application {
 
 		// Process the guess based on xInput and yInput values
 		try {
-				xValue = Integer.parseInt(xInput.getText());
-				yValue = Integer.parseInt(yInput.getText());
-				rotValue = Integer.parseInt(orientation.getText());
+			xValue = Integer.parseInt(xInput.getText());
+			yValue = Integer.parseInt(yInput.getText());
+			rotValue = Integer.parseInt(orientation.getText());
 		} catch (Exception e) {
 			// TODO: add alert if we want one, or just keep like this
 			System.out.println("x, y, or rot is not parsable to int");
@@ -379,8 +394,7 @@ public class GUI extends Application {
 		if (!game.humanPlaceShip(isPlayer1, xValue, yValue, rotValue, game.nextShip(isPlayer1)))
 			return;
 
-		printBoard(false);
-		printBoard(true);
+		printBoards();
 
 		xInput.clear();
 		yInput.clear();
@@ -389,28 +403,27 @@ public class GUI extends Application {
 		// plays AI move or switches to next player
 		if (game.isAI) {
 			game.computerPlaceShip(true);
-			printBoard(true);
+			printBoards();
 		} else
 			isPlayer1 = !isPlayer1;
 		System.out.println(game.nextShip(isPlayer1));
 		if (game.nextShip(isPlayer1) == null)
-			setInputGrid(true);
+			setGuessInputGrid();
 		else
 			shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
 	}
 
-	private static void printBoard(boolean firstBoard) {
-		if (firstBoard) {
-			//firstBoardArea.setText(game.getBoard(firstBoard));
-			firstBoardA.updateBoard(game.getActualBoard(firstBoard));
-		} else {
-			//secondBoardArea.setText(game.getBoard(firstBoard));
-			secondBoardA.updateBoard(game.getActualBoard(firstBoard));
-		}
+	
+	private static void printBoards() {
+		firstBoardA.updateBoard(game.getActualBoard(true));
+		secondBoardA.updateBoard(game.getActualBoard(false));
+
+		// prints each board
 		game.getBoard(true);
 		game.getBoard(false);
 	}
 
+	
 	private static void playMove(TextField xInput, TextField yInput) {
 		int xValue, yValue;
 		// Process the guess based on xInput and yInput values
@@ -425,6 +438,29 @@ public class GUI extends Application {
 
 		// Perform the game logic for the guess
 		System.out.println("Player " + (isPlayer1 ? "1" : "2") + " guess: (" + xValue + ", " + yValue + ")");
+		
+		
+		// !isPlayer 1 = 2nd board if only AI, might break with 2 player
+		// ExecuteSkillShot uses parameter firstBoard rather than player1
+		if (skillShot0.isSelected()) {
+			if (!game.ExecuteSkillShot(!isPlayer1, 0, xValue, yValue))
+				return;
+			skillShot0.setDisable(true);
+		} else if (skillShot1.isSelected()) {
+			if (!game.ExecuteSkillShot(!isPlayer1, 1, xValue, yValue))
+				return;
+			skillShot1.setDisable(true);
+		} else if (skillShot2.isSelected()) {
+			if (!game.ExecuteSkillShot(!isPlayer1, 2, xValue, yValue))
+				return;
+			skillShot2.setDisable(true);
+		} else {
+			// does nothing else (may put up alerts tho) if move is invalid
+			if (!game.humanPlayMove(isPlayer1, xValue, yValue))
+				return;
+		}
+		
+
 
 		if (game.gameOver()) {
 			try {
@@ -434,45 +470,22 @@ public class GUI extends Application {
 			}
 		}
 
-		// does nothing else (may put up alerts tho) if move is invalid
-		if (!game.humanPlayMove(isPlayer1, xValue, yValue))
-			return;
-
-		/*
-		 * Luckie here! I put these in player
-		 * 
-		 * //make sure guess is within bounds if (xValue >= 10 || xValue < 0) { if
-		 * (yValue >= 10 || yValue < 0) { //alert both values invalid Alert alert = new
-		 * Alert(AlertType.CONFIRMATION); alert.setHeaderText("Invalid Guess");
-		 * alert.setContentText("Both X and Y coordinates are invalid");
-		 * alert.showAndWait(); }else { //alert x invalid Alert alert = new
-		 * Alert(AlertType.CONFIRMATION); alert.setHeaderText("Invalid Guess");
-		 * alert.setContentText("X coordinate is invalid"); alert.showAndWait(); }}else
-		 * if (yValue >= 10 || yValue < 0) { //alert y invalid Alert alert = new
-		 * Alert(AlertType.CONFIRMATION); alert.setHeaderText("Invalid Guess");
-		 * alert.setContentText("Y coordinate is invalid"); alert.showAndWait(); }
-		 * 
-		 * //make sure guess hasn't already been guessed if
-		 * (board.guessedBoard[xValue][yValue]) { Alert alert = new
-		 * Alert(AlertType.CONFIRMATION); alert.setHeaderText("Invalid Guess");
-		 * alert.setContentText("This location has already been guessed");
-		 * alert.showAndWait(); }
-		 */
-
 		// if game still running update the board
-		printBoard(isPlayer1);
+		printBoards();
 		xInput.clear();
 		yInput.clear();
 
 		// plays AI move or switches to next player
 		if (game.isAI) {
 			game.computerPlayMove();
-			printBoard(false);
+			printBoards();
 		} else
 			isPlayer1 = !isPlayer1;
 	}
 
-	public static void startGameOver() throws Exception {
+	// sets the game over screen
+	
+	public static void startGameOver() {
 		Button newGame, end;
 		StackPane gO = new StackPane();
 		StackPane statTitle = new StackPane();
@@ -495,7 +508,7 @@ public class GUI extends Application {
 		Label stats = new Label("P1       Game Stats      P2");
 		Label ss = new Label(String.format("%-10s", statsP1[0]) + "Ships Sunk" + String.format("%10s", statsP2[0]));
 		Label gm = new Label(String.format("%-7s", statsP1[1]) + "Guesses Made" + String.format("%7s", statsP2[1]));
-		Label miss = new Label(String.format("%-13s", statsP1[2]) + "Hisses" + String.format("%14s", statsP2[2]));
+		Label miss = new Label(String.format("%-13s", statsP1[2]) + "Misses" + String.format("%14s", statsP2[2]));
 		Label hits = new Label(String.format("%-15s", statsP1[3]) + "Hits" + String.format("%16s", statsP2[3]));
 
 		gameOver.setFont(Font.font("Impact", 40));
@@ -572,50 +585,91 @@ public class GUI extends Application {
 		primaryStage.show();
 	}
 
+	// music player functions
+
+	// Plays a song, boolean isSong is used to determine whether songPlayer or
+	// effectsPlayer should be used
+	private static void playAudio(String audio, boolean isSong) {
+		System.out.println(audio);
+		File file = new File(audio);
+		URI uri = file.toURI();
+		Media media = new Media(uri.toString());
+
+		MediaPlayer curPlayer = new MediaPlayer(media);
+		// mediaPlayer.setOnEndOfMedia(new Waiter());
+		curPlayer.setAutoPlay(true);
+		curPlayer.play();
+
+		if (isSong) {
+			songPlayer = curPlayer;
+		} else {
+			effectsPlayer = curPlayer;
+		}
+	}
+
+	private static void playAFunSong() {
+		String str = "Mp3s/tgw.mp3";
+		playAudio(str, true);
+	}
+
+	private static void playABoringSong() {
+		String str = "Mp3s/[1080p HD] Call of Duty Black Ops Multiplayer Menu Music.mp3";
+		playAudio(str, true);
+	}
+
+	public static void playExplosion() {
+		String str = "Mp3s/Explosion sound effect.mp3";
+		playAudio(str, false);
+	}
+	// music player functions
+
 	public static void main(String[] args) {
 		launch(args);
 	}
 
-	private static void playAFunSong() {
-
-		String str = "Mp3s/tgw.mp3";
-		System.out.println(str);
-		File file = new File(str);
-		URI uri = file.toURI();
-		Media media = new Media(uri.toString());
-		songPlayer = new MediaPlayer(media);
-		// mediaPlayer.setOnEndOfMedia(new Waiter());
-		songPlayer.setAutoPlay(true);
-		songPlayer.play();
-
-	}
-
-	private static void playABoringSong() {
-
-		String str = "Mp3s/[1080p HD] Call of Duty Black Ops Multiplayer Menu Music.mp3";
-		System.out.println(str);
-		File file = new File(str);
-		URI uri = file.toURI();
-		Media media = new Media(uri.toString());
-		songPlayer = new MediaPlayer(media);
-		// mediaPlayer.setOnEndOfMedia(new Waiter());
-		songPlayer.setAutoPlay(true);
-		songPlayer.play();
-
-	}
-
-	public static void playExplosion() {
-
-		String str = "Mp3s/Explosion sound effect.mp3";
-		System.out.println(str);
-		File file = new File(str);
-		URI uri = file.toURI();
-		Media media = new Media(uri.toString());
-		effectsPlayer = new MediaPlayer(media);
-		// mediaPlayer.setOnEndOfMedia(new Waiter());
-		effectsPlayer.setAutoPlay(true);
-		effectsPlayer.play();
-
-	}
-
 }
+
+// old code:
+
+// top of start game for textarea view
+// 
+//	opponentArea.setAlignment(Pos.CENTER);
+//	firstBoardArea.setEditable(false); // Set to read-only
+//	firstBoardArea.setMaxWidth(360);
+//	firstBoardArea.setMaxHeight(368);
+//	// secondBoardArea.setWrapText(true);
+//	firstBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
+//
+//	secondBoardArea.setEditable(false); // Set to read-only
+//	secondBoardArea.setMaxWidth(360);
+//	secondBoardArea.setMaxHeight(368);
+//	// firstBoardArea.setWrapText(true);
+//	secondBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
+
+/*
+ * in printBoard /* if (isFirstBoard) {
+ * //firstBoardArea.setText(game.getBoard(firstBoard));
+ * firstBoardA.updateBoard(game.getActualBoard(isFirstBoard)); } else {
+ * //secondBoardArea.setText(game.getBoard(firstBoard));
+ * secondBoardA.updateBoard(game.getActualBoard(isFirstBoard)); }
+ */
+
+/*
+ * playExplosion () String str = "Mp3s/Explosion sound effect.mp3";
+ * System.out.println(str); File file = new File(str); URI uri = file.toURI();
+ * Media media = new Media(uri.toString()); effectsPlayer = new
+ * MediaPlayer(media); // mediaPlayer.setOnEndOfMedia(new Waiter());
+ * effectsPlayer.setAutoPlay(true); effectsPlayer.play();
+ * 
+ * playABoringSong() String str = "Mp3s/tgw.mp3"; System.out.println(str); File
+ * file = new File(str); URI uri = file.toURI(); Media media = new
+ * Media(uri.toString()); songPlayer = new MediaPlayer(media); //
+ * mediaPlayer.setOnEndOfMedia(new Waiter()); songPlayer.setAutoPlay(true);
+ * songPlayer.play();
+ * 
+ * playAFunSong() String str = "Mp3s/tgw.mp3"; System.out.println(str); File
+ * file = new File(str); URI uri = file.toURI(); Media media = new
+ * Media(uri.toString()); songPlayer = new MediaPlayer(media); //
+ * mediaPlayer.setOnEndOfMedia(new Waiter()); songPlayer.setAutoPlay(true);
+ * songPlayer.play();
+ */

@@ -34,7 +34,6 @@ public class Ship {
 		notHit--;
 		if(notHit <= 0) {
 			sunk = true;
-			master.update();
 		}
 	}
 	

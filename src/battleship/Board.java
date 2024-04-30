@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Board {
 	public int shipsPlaced = 0;
 	final static int TOTAL_SHIPS = 5;
+	final static int BOARD_SIZE = 10;
 	
 	private int hits = 0;
 	private int misses = 0;
@@ -12,6 +13,8 @@ public class Board {
 	Ships ships;
 	ArrayList<Ship> placedShips;
 	Square[][] squareBoard;
+	
+	private SkillShot[] skills = new SkillShot[3];
 	
 	// I implemented it in a way that doesn't need guessBoard 
 	// since we can get that info from squareBoard !
@@ -24,11 +27,33 @@ public class Board {
 	boolean isOver;
 	
 	public Board(boolean p) {
+		
+		int[][] rowArr = new int[11][2];
+		int[][] colArr = new int[11][2];
+		for (int i = 0; i < 11; i++) {
+			rowArr[i][0] = i - 5;
+			colArr[i][1] = i - 5;
+		}
+		
+		int[][] gridShot = new int[9][2];
+		int i = 0;
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 3; y++) {
+				gridShot[i][0] = x - 1;
+				gridShot[i][1] = y - 1;
+				i++;
+			}
+		}
+		
+		skills[0] = new SkillShot(rowArr);
+		skills[1] = new SkillShot(colArr);
+		skills[2] = new SkillShot(gridShot);
+		
 		//initialize board
 		ships = new Ships(this);
-		squareBoard = new Square[10][10];
-		guessedBoard = new boolean[10][10];
-		for(int i = 0; i < 10; i++) {
+		squareBoard = new Square[BOARD_SIZE][BOARD_SIZE];
+		guessedBoard = new boolean[BOARD_SIZE][BOARD_SIZE];
+		for(i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
 				squareBoard[i][j] = new Square(i, j);
 				guessedBoard[i][j] = false;
@@ -39,7 +64,17 @@ public class Board {
 		placedShips = new ArrayList<Ship>();
 	}
 	
+	// 0 = 
+	public int[][] getSkillShot(int index, int x, int y) {
+		return skills[index].Execute(x, y);
+	}
+	
 	public boolean guess(int x, int y) {
+		if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) {
+			System.out.println("guess out of board bounds (" + x + ", " + y + ")");
+			return false;
+		}
+		
 		//player can make a move
 		if(!guessedBoard[x][y]) {
 			// if ship is hit
@@ -92,7 +127,7 @@ public class Board {
 			
 			// return false if outside of board bounds.
 			if (point[0] < 0 || point[0] >= 10 || point[1] < 0 || point[1] >= 10) {
-				System.out.println("Player.ShipAdd() coords out of bounds");
+				System.out.println("Board.ShipAdd() coords out of bounds");
 				return false;
 			}
 			
@@ -101,7 +136,7 @@ public class Board {
 			// return false if any ship square is occupied already
 			if (curSquare != 'X' && curSquare != '.') {
 				// TODO: output exception if necessary
-				System.out.println("Player.ShipAdd() coords occupied");
+				System.out.println("Board.ShipAdd() coords occupied");
 				return false;
 			}
 		}
@@ -131,11 +166,7 @@ public class Board {
 	
 	public boolean isOver() {
 		//true = running, false = all ships sunk
-		return isOver;
-	}
-	
-	public void gameOver() {
-		isOver = true;
+		return ships.getSunkShips() == TOTAL_SHIPS;
 	}
 	
 	//return char representation of board
