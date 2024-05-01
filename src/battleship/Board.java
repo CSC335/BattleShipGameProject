@@ -80,7 +80,13 @@ public class Board {
 			// if ship is hit
 			if (squareBoard[x][y].guess()) {
 				hits++;
-				GUI.playExplosion();
+				if (player) {
+				GUI.expR.setCoords(x*36,y*36);
+				GUI.expR.playExplosion();
+				}else {
+				GUI.expL.setCoords(x*36, y*36);
+				GUI.expL.playExplosion();
+				}
 				System.out.println("increasing hits to " + hits);
 			} else {
 				misses++;

@@ -23,15 +23,17 @@ public class ExplosionClass {
 		gc = g;
 		x = 0;
 		y = 0;
-		Image image = new Image("File:Explosion/explosion6.png");
-		Image image2 = new Image("File:Explosion/explosion3.png");
-		Image image3 = new Image("File:Explosion/explosion4.png");
-		Image image4 = new Image("File:Explosion/explosion5.png");
-		images = new Image[4];
+		Image image = new Image("File:Explosion/explosion6.png", 36, 36, false, false);
+		Image image2 = new Image("File:Explosion/explosion3.png", 36, 36, false, false);
+		Image image3 = new Image("File:Explosion/explosion4.png", 36, 36, false, false);
+		Image image4 = new Image("File:Explosion/explosion5.png", 36, 36, false, false);
+		Image image5 = new Image("File:images/sunk.png", 36, 36, false, false);
+		images = new Image[5];
 		images[0] = image;
 		images[1] = image2;
 		images[2] = image3;
 		images[3] = image4;
+		images[4] = image5;
 	}
 	
 	public void setCoords(int newx, int newy) {
@@ -41,7 +43,7 @@ public class ExplosionClass {
 	
 	public void playExplosion() {
 		Timeline timeline2 = new Timeline();
-		timeline2.setCycleCount(4);
+		timeline2.setCycleCount(5);
 		timeline2.getKeyFrames().add(new KeyFrame(Duration.millis(400),new AnimateStarter()));
 		timeline2.play();
 	}
@@ -51,7 +53,7 @@ public class ExplosionClass {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				 if (i == 4) {
+				 if (i == 5) {
 					 i = 0;
 				 }
 				 gc.clearRect(0, 0, 360, 360);

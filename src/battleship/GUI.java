@@ -208,8 +208,8 @@ public class GUI extends Application {
 		secondBoardStack = new StackPane();
 		waterLpane = new BorderPane();
 		Canvas expLC = new Canvas(360, 360);
-		GraphicsContext gL = expRC.getGraphicsContext2D();
-		expR = new ExplosionClass(gL);
+		GraphicsContext gL = expLC.getGraphicsContext2D();
+		expL = new ExplosionClass(gL);
 		secondBoardStack.getChildren().addAll(waterLpane, firstBoardA, expLC);
 		waterL();
 
@@ -495,8 +495,9 @@ public class GUI extends Application {
 			skillShot2.setDisable(true);
 		} else {
 			// does nothing else (may put up alerts tho) if move is invalid
-			if (!game.humanPlayMove(isPlayer1, xValue, yValue))
+			if (!game.humanPlayMove(isPlayer1, xValue, yValue)) {
 				return;
+			}
 		}
 		
 

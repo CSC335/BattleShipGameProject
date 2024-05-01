@@ -35,7 +35,7 @@ public class CanvasView extends BorderPane{
 		gc = canvas.getGraphicsContext2D();
 		player = true;
 		//gui = g;
-		hitImg = new Image("file:Images/hit5.png", 36, 36, false, false);
+		hitImg = new Image("file:Images/sunk.png", 36, 36, false, false);
 		missImg = new Image("file:Images/miss.png", 36, 36, false, false);
 		sunkImg = new Image("file:Images/sunk.png", 36, 36, false, false);
 		canvas.setOnMousePressed(event->{

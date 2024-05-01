@@ -126,7 +126,9 @@ public class BattleshipGame {
 		} else {
 			playing = player2.playMove(x, y);
 		}
-		
+		if(playing) {
+			//GUI.expL.setCoords(x * 36, y * 36);
+		}
 		return playing;
 	}
 	
