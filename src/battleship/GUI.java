@@ -564,6 +564,14 @@ public class GUI extends Application {
 		// Apply effects like drop shadow and reflection
 		gameOver.setEffect(new InnerShadow());
 		gameOver.setEffect(new Glow(0.8));
+		
+		 Button startButton = new Button("N E W   G A M E");
+			startButton
+					.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
+							+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
+			startButton.setOnAction(event -> {
+				
+			});
 
 		// add the Stats
 		gp.add(statTitle, 1, 0);

@@ -54,6 +54,8 @@ public class GameOver extends Application{
 	    Label miss = new Label("Misses");
 	    Label hits = new Label("Hits");
 	    
+	   
+	    
 		gameOver.setFont(Font.font("Impact", 40));
 		stats.setFont(Font.font("Impact", 20));
 		//gameOver.setTextFill(Color.TRANSPARENT);
