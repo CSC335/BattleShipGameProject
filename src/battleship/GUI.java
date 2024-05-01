@@ -175,7 +175,7 @@ public class GUI extends Application {
 		primaryStage.show();
 	}
 
-	public static void startGame(Stage primaryStage, String whichAI) {
+	public void startGame(Stage primaryStage, String whichAI) {
 		game = new BattleshipGame(whichAI);
 
 		// Determine board labels based on isAI flag
@@ -246,7 +246,7 @@ public class GUI extends Application {
 		primaryStage.show();
 	}
 
-	private static void setShipInputGrid() {
+	private void setShipInputGrid() {
 		GridPane inputGrid = new GridPane();
 
 		// Create input fields for x and y coordinates
@@ -347,7 +347,7 @@ public class GUI extends Application {
 		root.setBottom(inputGrid);
 	}
 
-	private static void setGuessInputGrid() {
+	private void setGuessInputGrid() {
 		GridPane inputGrid = new GridPane();
 		// Create input fields for x and y coordinates
 		TextField xInput = new TextField();
@@ -403,7 +403,7 @@ public class GUI extends Application {
 		root.setBottom(inputGrid);
 	}
 
-	private static void addShip(TextField xInput, TextField yInput, TextField orientation, Label shipSize) {
+	private void addShip(TextField xInput, TextField yInput, TextField orientation, Label shipSize) {
 		int xValue, yValue, rotValue;
 
 		// Process the guess based on xInput and yInput values
@@ -443,7 +443,7 @@ public class GUI extends Application {
 	}
 
 	
-	private static void printBoards() {
+	private void printBoards() {
 		firstBoardA.updateBoard(game.getActualBoard(true));
 		secondBoardA.updateBoard(game.getActualBoard(false));
 
@@ -452,7 +452,7 @@ public class GUI extends Application {
 		game.getBoard(false);
 	}
 	
-	private static void playAttack(int xValue, int yValue) {
+	private void playAttack(int xValue, int yValue) {
 		// !isPlayer 1 = 2nd board if only AI, might break with 2 player
 				// ExecuteSkillShot uses parameter firstBoard rather than player1
 				if (skillShot0.isSelected()) {
@@ -503,7 +503,7 @@ public class GUI extends Application {
 	}
 
 	
-	private static void playMove(TextField xInput, TextField yInput) {
+	private void playMove(TextField xInput, TextField yInput) {
 		int xValue, yValue;
 		// Process the guess based on xInput and yInput values
 		try {
@@ -529,7 +529,7 @@ public class GUI extends Application {
 
 	// sets the game over screen
 	
-	public static void startGameOver() {
+	public void startGameOver() {
 		StackPane gO = new StackPane();
 		StackPane statTitle = new StackPane();
 		StackPane statsTwo = new StackPane();
@@ -569,9 +569,7 @@ public class GUI extends Application {
 			startButton
 					.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
 							+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
-			startButton.setOnAction(event -> {
-				
-			});
+			
 
 		// add the Stats
 		gp.add(statTitle, 1, 0);
@@ -579,6 +577,7 @@ public class GUI extends Application {
 		gp.add(statsThree, 1, 2);
 		gp.add(statsFour, 1, 3);
 		gp.add(statsFive, 1, 4);
+		gp.add(startButton, 1, 5);
 		gp.setAlignment(Pos.CENTER);
 		gp.setVgap(5);
 
@@ -618,6 +617,12 @@ public class GUI extends Application {
 		root.setBorder(null);
 		Scene scene = new Scene(root, 400, 300);
 		Stage GameOverStage = new Stage();
+		startButton.setOnAction(event -> {
+			GameOverStage.close();
+			GUI.primaryStage.close();
+			start(new Stage());
+			Application.launch(GUI.class, new String[0]);
+		});
 		GameOverStage.setScene(scene);
 		GameOverStage.show();
 	}
@@ -741,7 +746,7 @@ public class GUI extends Application {
 			}
 			 
 		 }
-	
+	 
 	
 	public static void main(String[] args) {
 		launch(args);
