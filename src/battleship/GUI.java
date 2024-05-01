@@ -394,12 +394,26 @@ public class GUI extends Application {
 				playAttack(y, x);
 			}
 		});
+		Button tutorialButton = new Button("Tutorial");
+		tutorialButton
+				.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
+						+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
+		tutorialButton.setOnAction(event -> {
+			TutorialScreen tutorialScreen = new TutorialScreen();
+			try {
+				tutorialScreen.start(new Stage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 		
 		inputGrid.setAlignment(Pos.CENTER);
 		inputGrid.add(skillShot0, 0, 4, 1, 1);
 		inputGrid.add(skillShot1, 1, 4, 1, 1);
 		inputGrid.add(skillShot2, 2, 4, 1, 1);
 		inputGrid.add(skillShot3, 3, 4, 1, 1);
+		inputGrid.add(tutorialButton, 4, 4, 1, 1);
 		root.setBottom(inputGrid);
 	}
 
@@ -484,7 +498,7 @@ public class GUI extends Application {
 						startGameOver();
 					} catch (Exception e) {
 						e.printStackTrace();
-					}
+					} 
 					return;
 				}
 
@@ -592,7 +606,7 @@ public class GUI extends Application {
 		gp.add(statsThree, 1, 3);
 		gp.add(statsFour, 1, 4);
 		gp.add(statsFive, 1, 5);
-		gp.add(startButton, 1, 6);
+		gp.add(startButton, 1, 6, 2, 2);
 		gp.setAlignment(Pos.CENTER);
 		gp.setVgap(5);
 
