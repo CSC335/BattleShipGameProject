@@ -29,12 +29,14 @@ public class TutorialScreen extends Application {
 		GridPane tut = new GridPane();
 		
 		Label tutorial = new Label("  Tutorial  ");
-		Label instructions = new Label("1. The ammo listed is the amount of 'Special shots' \n"
-			 + "2. A special shot works ...\n"
-			 + "3. have fun\n"
-			 + "4. be nice\n"
-			 + "5. guess their ships before they get yours\n"
-			 + "6. Enjoy the music\n");
+		Label instructions = new Label("1. you can select what type of shot you'd like to use \n"
+			 + "2. if you use \"row\" it goes across the row \n"
+			 + "3. if you use \"col\" it will go down the column\n"
+			 + "4. \"3x3\" fires a shot in a 3x3 square\n"
+			 + "5. you can use each type of special shot only once\n"
+			 + "6. click where you would like to make a guess\n"
+			 + "7. sink their ships before they sink yours\n"
+			 + "8. enjoy the music\n");
 		tutorial.setFont(Font.font("Impact", 40));
 		tutorial.setTextFill(Color.rgb(86, 147, 187));
 		tutorial.setEffect(new Glow(0.8));
@@ -52,15 +54,15 @@ public class TutorialScreen extends Application {
 		info = false;
 		moreInfo.setOnAction(event->{
 			if (info == true) {
-				instructions.setText("I give up on teaching you");
+				instructions.setText("you, my friend, simply cannot be taught");
 				tutorial.setFont(Font.font("Impact", 80));
 			}else {
 				info = true;
 			instructions.setText("I will make it real simple for you \n"
-					+ "1. The ammo listed is the amount of 'Special shots' \n"
-					 + "2. A special shot works ...\n"
-					 + "3. You put in the coordinates of where you think the enemy ship is\n"
-					 + "4. if its a hit guess the nearby spots to sink a ship\n"
+					+ "1. clicking a square is a \"guess\" \n"
+					 + "2. you can use the special shots or not I dont care\n"
+					 + "3. If you make a hit, guess the spots nearby!\n"
+					 + "4. I reccomend guessing in a checker board pattern to be efficient\n"
 					 + "5. you want to sink all of their ships before they get yours \n"
 					 + "6. dude idk if you havent figured it out by now\n");
 				tutorial.setFont(Font.font("Impact", 60));

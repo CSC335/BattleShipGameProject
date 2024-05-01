@@ -28,12 +28,11 @@ public class ExplosionClass {
 		Image image3 = new Image("File:Explosion/explosion4.png", 36, 36, false, false);
 		Image image4 = new Image("File:Explosion/explosion5.png", 36, 36, false, false);
 		Image image5 = new Image("File:images/sunk.png", 36, 36, false, false);
-		images = new Image[5];
+		images = new Image[4];
 		images[0] = image;
 		images[1] = image2;
 		images[2] = image3;
 		images[3] = image4;
-		images[4] = image5;
 	}
 	
 	public void setCoords(int newx, int newy) {
@@ -54,6 +53,7 @@ public class ExplosionClass {
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				 if (i == 4) {
+					 gc.clearRect(0, 0, 360, 360);
 					 i = 0;
 				 }
 				 gc.clearRect(0, 0, 360, 360);
