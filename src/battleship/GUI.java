@@ -292,11 +292,9 @@ public class GUI extends Application {
 			orientation.clear();
 
 			// plays AI move or switches to next player
-			if (game.isAI) {
-				game.computerPlaceShip(true);
-				printBoards();
-			} else
-				isPlayer1 = !isPlayer1;
+			game.computerPlaceShip(true);
+			printBoards();
+
 			System.out.println(game.nextShip(isPlayer1));
 			if (game.nextShip(isPlayer1) == null)
 				setGuessInputGrid();
@@ -421,10 +419,10 @@ public class GUI extends Application {
 
 		// Perform the game logic for the guess
 		System.out.println(
-				"Player " + (isPlayer1 ? "1" : "2") + " place: (" + xValue + ", " + yValue + "," + rotValue + ")");
+				"Player placeS: (" + xValue + ", " + yValue + "," + rotValue + ")");
 
 		// does nothing else (may put up alerts tho) if move is invalid
-		if (!game.humanPlaceShip(isPlayer1, xValue, yValue, rotValue, game.nextShip(isPlayer1)))
+		if (!game.humanPlaceShip(xValue, yValue, rotValue, game.nextShip(isPlayer1)))
 			return;
 
 		printBoards();
@@ -433,12 +431,9 @@ public class GUI extends Application {
 		yInput.clear();
 		orientation.clear();
 
-		// plays AI move or switches to next player
-		if (game.isAI) {
-			game.computerPlaceShip(true);
-		} else
-			isPlayer1 = !isPlayer1;
+		game.computerPlaceShip(true);
 		System.out.println(game.nextShip(isPlayer1));
+		
 		if (game.nextShip(isPlayer1) == null)
 			setGuessInputGrid();
 		else
@@ -461,23 +456,23 @@ public class GUI extends Application {
 		// !isPlayer 1 = 2nd board if only AI, might break with 2 player
 				// ExecuteSkillShot uses parameter firstBoard rather than player1
 				if (skillShot0.isSelected()) {
-					if (!game.ExecuteSkillShot(!isPlayer1, 0, yValue, xValue))
+					if (!game.executeSkillShot(!isPlayer1, 0, yValue, xValue))
 						return;
 					skillShot0.setSelected(false);
 					skillShot0.setDisable(true);
 				} else if (skillShot1.isSelected()) {
-					if (!game.ExecuteSkillShot(!isPlayer1, 1, yValue, xValue))
+					if (!game.executeSkillShot(!isPlayer1, 1, yValue, xValue))
 						return;
 					skillShot1.setSelected(false);
 					skillShot1.setDisable(true);
 				} else if (skillShot2.isSelected()) {
-					if (!game.ExecuteSkillShot(!isPlayer1, 2, yValue, xValue))
+					if (!game.executeSkillShot(!isPlayer1, 2, yValue, xValue))
 						return;
 					skillShot2.setSelected(false);
 					skillShot2.setDisable(true);
 				} else {
 					// does nothing else (may put up alerts tho) if move is invalid
-					if (!game.humanPlayMove(isPlayer1, xValue, yValue)) {
+					if (!game.humanPlayMove(xValue, yValue)) {
 						return;
 					}
 				}
@@ -493,12 +488,10 @@ public class GUI extends Application {
 					return;
 				}
 
-				// plays AI move or switches to next player
-				if (game.isAI) {
-					game.computerPlayMove();
-					printBoards();
-				} else
-					isPlayer1 = !isPlayer1;
+				// plays AI move
+				game.computerPlayMove();
+				printBoards();
+
 				
 				if (game.gameOver()) {
 					try {

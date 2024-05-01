@@ -7,20 +7,10 @@ public class BattleshipGame {
 	
 	private Board a, b;
 	private BattleShipStrategy strategyAI;
-	private Player player1, player2;
-	
-	public boolean isAI;
+	private Player player1;
 	
 	public BattleshipGame(String whichAI) {
-		// check if it is random or hard ai right now
-		if(whichAI == "random" || whichAI == "hard") {
-			this.isAI = true;
-		} else {
-			this.isAI = false;
-		}
-		
-		// set a to new Board(true)
-		a = new Board(!isAI);
+		a = new Board(false);
 		b = new Board(true);
 		
 		if (whichAI == "random") {
@@ -33,8 +23,8 @@ public class BattleshipGame {
 			strategyAI = new HardAI();
 		} else {
 			// player1 on left, player2 on right
-			player1 = new Player(a, b);
-			player2 = new Player(b, a);
+			player1 = new Player(b, a);
+			strategyAI = new Server(8000);
 		}
 		//initialize the game
 		// start the gui
@@ -60,14 +50,14 @@ public class BattleshipGame {
 	}
 	
 	public Ship nextShip(boolean isPlayer1) {
-		if (isPlayer1 == isAI) {
+		if (isPlayer1) {
 			return b.getNextShip();
 		} else {
 			return a.getNextShip();
 		}
 	}
 	
-	public boolean ExecuteSkillShot(boolean fromFirstBoard, int skillIndex, int x, int y) {
+	public boolean executeSkillShot(boolean fromFirstBoard, int skillIndex, int x, int y) {
 		Board curBoard = b;
 		Board oppBoard = a;
 		if (fromFirstBoard) {
@@ -86,28 +76,16 @@ public class BattleshipGame {
 		return true;
 	}
 	
-	public boolean humanPlaceShip(boolean isPlayer1, int x, int y, int orientation, Ship ship) {
-		if (isPlayer1) {
-			return player1.ShipAdd(x, y, orientation, ship);
-		} else {
-			return player2.ShipAdd(x, y, orientation, ship);
-		}
+	public boolean humanPlaceShip(int x, int y, int orientation, Ship ship) {
+		return player1.ShipAdd(x, y, orientation, ship);
 	}
 	
-	public ArrayList<Ship> getShips(boolean first) {
+	public ArrayList<Ship> getShips() {
 		ArrayList<Ship> ships = new ArrayList<Ship>();
-		if(first) {
-			if(this.isAI) {
-				for(int i = 0; i < 5; i++) {
-					ships.add(a.ships.shipObjs[i]);
-				}
-				return ships;
-			}else {
-				return player1.ships;
-			}
-		}else {
-			return player2.ships;
+		for(int i = 0; i < 5; i++) {
+			ships.add(a.ships.shipObjs[i]);
 		}
+		return ships;
 	}
 	
 	public void computerPlaceShip(boolean board1) {
@@ -118,24 +96,27 @@ public class BattleshipGame {
 		a.shipsPlaced++;
 	}
 	
-	public boolean humanPlayMove(boolean isPlayer1, int x, int y) {
-		boolean playing;
-		if (isPlayer1) {
-			// playMove checks is move is valid before playing
-			playing = player1.playMove(x, y);
-		} else {
-			playing = player2.playMove(x, y);
-		}
-		if(playing) {
+	public boolean humanPlayMove(int x, int y) {
+		// playMove checks is move is valid before playing
+		return player1.playMove(x, y);
+		//if(playing) {
 			//GUI.expL.setCoords(x * 36, y * 36);
-		}
-		return playing;
+		//}
 	}
 	
 	public void computerPlayMove() {
 		// guess will play move; this assumes move is valid
+		int next = a.nextSkillShot();
 		int[] guess = strategyAI.desiredMove(b);
-		b.guess(guess[0], guess[1]);
+		
+		System.out.println(next);
+		
+		if (next == -1) {
+			b.guess(guess[0], guess[1]);
+			return;
+		}
+		
+		executeSkillShot(true, next, guess[0], guess[1]);
 	}
 	
 	public Board getActualBoard(boolean firstBoard) {

@@ -20,6 +20,7 @@ public class SkillShot {
 			coord[0] += x;
 			coord[1] += y;
 		}
+		enabled = false;
 		return coords;
 	}
 	

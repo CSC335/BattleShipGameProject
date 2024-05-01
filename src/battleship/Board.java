@@ -64,6 +64,16 @@ public class Board {
 		placedShips = new ArrayList<Ship>();
 	}
 	
+	public int nextSkillShot() {
+		if (skills[0].isEnabeled())
+			return 0;
+		if (skills[1].isEnabeled())
+			return 1;
+		if (skills[2].isEnabeled())
+			return 2;
+		return -1;
+	}
+	
 	// 0 = 
 	public int[][] getSkillShot(int index, int x, int y) {
 		return skills[index].Execute(x, y);
