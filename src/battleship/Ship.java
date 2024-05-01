@@ -63,9 +63,17 @@ public class Ship {
 	
 	public Image img() {
 		if(orientation % 2 == 0) {
-			return new Image(file1, 36, size * 36, false, false);
+			if(sunk) {
+				return new Image(file + "1Sunk.png", 36, size * 36, false, false);
+			}else {
+				return new Image(file + "1.png", 36, size * 36, false, false);
+			}
 		}else {
-			return new Image(file, size * 36, 36, false, false);
+			if(sunk) {
+				return new Image(file + "Sunk.png", size * 36, 36, false, false);
+			}else {
+				return new Image(file + ".png", size * 36, 36, false, false);
+			}
 		}
 	}
 	

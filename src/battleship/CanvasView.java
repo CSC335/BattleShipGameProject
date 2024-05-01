@@ -38,12 +38,12 @@ public class CanvasView extends BorderPane{
 		hitImg = new Image("file:Images/sunk.png", 36, 36, false, false);
 		missImg = new Image("file:Images/miss.png", 36, 36, false, false);
 		sunkImg = new Image("file:Images/sunk.png", 36, 36, false, false);
-		canvas.setOnMousePressed(event->{
-			x = (int) event.getSceneX();
-			y = (int) event.getSceneY();
-			x = x / 36;
-			y = y / 36;
-		});
+//		canvas.setOnMousePressed(event->{
+//			x = (int) event.getSceneX();
+//			y = (int) event.getSceneY();
+//			x = x / 36;
+//			y = y / 36;
+//		});
 		this.setCenter(canvas);
 	}
 	
@@ -87,9 +87,9 @@ public class CanvasView extends BorderPane{
 			curr = ships.get(i);
 			if(player || curr.isSunk()) {
 				squares = curr.squares();
-				System.out.println(squares.toString());
+				//System.out.println(squares.toString());
 				if(curr.orientation() % 2 == 0) {
-					System.out.println(0);
+					//System.out.println(0);
 					minI = 9;
 					for(int j = 0; j < curr.size(); j++) {
 						currI = squares.get(j).y;
@@ -99,10 +99,10 @@ public class CanvasView extends BorderPane{
 					}
 					img = curr.img();
 					gc.drawImage(img, squares.get(0).x * 36, minI * 36);
-					System.out.println("Drew img: " + curr.type + " : " + String.valueOf(squares.get(0).x)
-					 + " : " + String.valueOf(minI * 36));
+//					System.out.println("Drew img: " + curr.type + " : " + String.valueOf(squares.get(0).x)
+//					 + " : " + String.valueOf(minI * 36));
 				}else {
-					System.out.println("1");
+					//System.out.println("1");
 					minI = 9;
 					for(int j = 0; j < curr.size(); j++) {
 						currI = squares.get(j).x;
@@ -112,8 +112,8 @@ public class CanvasView extends BorderPane{
 					}
 					img = curr.img();
 					gc.drawImage(img, minI * 36, squares.get(0).y * 36);
-					System.out.println("Drew img: " + curr.type + " : " + String.valueOf(minI * 36)
-					 + " : " + String.valueOf(squares.get(0).y));
+//					System.out.println("Drew img: " + curr.type + " : " + String.valueOf(minI * 36)
+//					 + " : " + String.valueOf(squares.get(0).y));
 				}
 			}
 		}
@@ -129,7 +129,7 @@ public class CanvasView extends BorderPane{
 						gc.drawImage(missImg, i * 36, j * 36);
 					}else {
 						if(curr.ship.isSunk()) {
-							gc.drawImage(sunkImg, i * 36, j * 36);
+							//gc.drawImage(sunkImg, i * 36, j * 36);
 						}else {
 							gc.drawImage(hitImg, i * 36, j * 36);
 						}

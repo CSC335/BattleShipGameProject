@@ -53,7 +53,7 @@ public class ExplosionClass {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				 if (i == 5) {
+				 if (i == 4) {
 					 i = 0;
 				 }
 				 gc.clearRect(0, 0, 360, 360);

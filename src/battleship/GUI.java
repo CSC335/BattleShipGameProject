@@ -62,6 +62,7 @@ public class GUI extends Application {
 	private static RadioButton boringMusic = new RadioButton("Boring Music");
 
 	private static boolean fun = false;
+	private static boolean playerTurn = false;
 
 	static BattleshipGame game;
 
@@ -212,7 +213,7 @@ public class GUI extends Application {
 		expL = new ExplosionClass(gL);
 		secondBoardStack.getChildren().addAll(waterLpane, firstBoardA, expLC);
 		waterL();
-
+		
 		// Create a BorderPane to hold all elements
 		root = new BorderPane();
 		root.setPadding(new Insets(40));
@@ -220,7 +221,40 @@ public class GUI extends Application {
 		root.setRight(firstBoardStack);
 		firstBoardA.setPlayer(false);
 		root.setLeft(secondBoardStack);
-
+		expLC.setOnMousePressed(event->{
+			int x = (int) event.getX();
+			int y = (int) event.getY();
+			System.out.print("tried to make move ");
+			System.out.print(x);
+			System.out.print(" ");
+			System.out.println(y);
+			x = x / 36;
+			y = y / 36;
+			System.out.print("tried to make move ");
+			System.out.print(x);
+			System.out.print(" ");
+			System.out.println(y);
+			if(isPlayer1) {
+				int temp = y;
+				y = x;
+				x = temp;
+				game.humanPlayMove(isPlayer1, x, y);
+				printBoards();
+				if (game.gameOver()) {
+					try {
+						startGameOver();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (game.isAI) {
+					game.computerPlayMove();
+					printBoards();
+				} else
+					isPlayer1 = !isPlayer1;
+			}
+		});
+		
 		// Create a BorderPane to hold all elements
 //		root = new BorderPane();
 //		root.setPadding(new Insets(40));
