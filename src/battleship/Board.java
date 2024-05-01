@@ -28,11 +28,11 @@ public class Board {
 	
 	public Board(boolean p) {
 		
-		int[][] rowArr = new int[11][2];
-		int[][] colArr = new int[11][2];
-		for (int i = 0; i < 11; i++) {
-			rowArr[i][0] = i - 5;
-			colArr[i][1] = i - 5;
+		int[][] rowArr = new int[21][2];
+		int[][] colArr = new int[21][2];
+		for (int i = 0; i < 21; i++) {
+			rowArr[i][0] = i - 10;
+			colArr[i][1] = i - 10;
 		}
 		
 		int[][] gridShot = new int[9][2];
