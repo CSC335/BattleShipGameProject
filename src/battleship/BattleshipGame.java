@@ -9,6 +9,8 @@ public class BattleshipGame {
 	private BattleShipStrategy strategyAI;
 	private Player player1;
 	
+	private Client client;
+	
 	public BattleshipGame(String whichAI) {
 		a = new Board(false);
 		b = new Board(true);
@@ -24,7 +26,8 @@ public class BattleshipGame {
 		} else {
 			// player1 on left, player2 on right
 			player1 = new Player(b, a);
-			strategyAI = new Server(8000);
+			client = new Client("localhost", 4000);
+			strategyAI = new Server(4000);
 		}
 		//initialize the game
 		// start the gui
@@ -57,7 +60,7 @@ public class BattleshipGame {
 		}
 	}
 	
-	public boolean executeSkillShot(boolean fromFirstBoard, int skillIndex, int x, int y) {
+	public boolean executeSkillShot(boolean fromFirstBoard, int skillIndex, int x, int y) {		
 		Board curBoard = b;
 		Board oppBoard = a;
 		if (fromFirstBoard) {
@@ -77,6 +80,9 @@ public class BattleshipGame {
 	}
 	
 	public boolean humanPlaceShip(int x, int y, int orientation, Ship ship) {
+		if (client != null)
+			client.sendShipPlacement(x, y, orientation, orientation);
+		
 		return player1.ShipAdd(x, y, orientation, ship);
 	}
 	
@@ -97,6 +103,9 @@ public class BattleshipGame {
 	}
 	
 	public boolean humanPlayMove(int x, int y) {
+		if (client != null)
+			client.sendMove(x, y);
+		
 		// playMove checks is move is valid before playing
 		return player1.playMove(x, y);
 		//if(playing) {
