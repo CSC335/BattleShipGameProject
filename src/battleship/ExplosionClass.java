@@ -27,7 +27,6 @@ public class ExplosionClass {
 		Image image2 = new Image("File:Explosion/explosion3.png", 36, 36, false, false);
 		Image image3 = new Image("File:Explosion/explosion4.png", 36, 36, false, false);
 		Image image4 = new Image("File:Explosion/explosion5.png", 36, 36, false, false);
-		Image image5 = new Image("File:images/sunk.png", 36, 36, false, false);
 		images = new Image[4];
 		images[0] = image;
 		images[1] = image2;
@@ -55,11 +54,11 @@ public class ExplosionClass {
 				 if (i == 4) {
 					 gc.clearRect(0, 0, 360, 360);
 					 i = 0;
-				 }
+				 }else {
 				 gc.clearRect(0, 0, 360, 360);
 				 gc.drawImage(images[i], x, y);
 				 i ++;
-			}
+			}}
 			
 			 
 		 }

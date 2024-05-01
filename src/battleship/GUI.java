@@ -531,6 +531,7 @@ public class GUI extends Application {
 	
 	public void startGameOver() {
 		StackPane gO = new StackPane();
+		StackPane	winL = new StackPane();
 		StackPane statTitle = new StackPane();
 		StackPane statsTwo = new StackPane();
 		StackPane statsThree = new StackPane();
@@ -547,6 +548,19 @@ public class GUI extends Application {
 		// (p1.ss + "Ships Sunk" + p2.ss)
 		int[] statsP1 = game.getStats(true);
 		int[] statsP2 = game.getStats(false);
+		
+		Label winLoss = new Label("  You Lost  ");
+		
+		if (statsP2[0] == 5) {
+			winLoss = new Label("  You Won  ");
+			winLoss.setTextFill(Color.rgb(25, 5, 250));
+		}else {
+			winLoss = new Label("  You Lost  ");
+			winLoss.setTextFill(Color.rgb(184, 16, 4));
+		}
+		winLoss.setFont(Font.font("Impact", 30));
+		winLoss.setEffect(new InnerShadow());
+		winLoss.setEffect(new Glow(0.8));
 
 		Label stats = new Label("P1       Game Stats      P2");	 
 		Label ss = new Label(String.format("%-10s", statsP1[0]) + "Ships Sunk" + String.format("%10s", statsP2[0]));
@@ -570,22 +584,25 @@ public class GUI extends Application {
 					.setStyle("-fx-background-color: rgb(0, 51, 102); " + "-fx-text-fill: white; " + "-fx-font-size: 16px; "
 							+ "-fx-pref-width: 120px; " + "-fx-pref-height: 40px;" + "-fx-font-family: Impact");
 			
-
+			startButton.setAlignment(Pos.CENTER);
 		// add the Stats
-		gp.add(statTitle, 1, 0);
-		gp.add(statsTwo, 1, 1);
-		gp.add(statsThree, 1, 2);
-		gp.add(statsFour, 1, 3);
-		gp.add(statsFive, 1, 4);
-		gp.add(startButton, 1, 5);
+			gp.add(winL, 1, 0);
+		gp.add(statTitle, 1, 1);
+		gp.add(statsTwo, 1, 2);
+		gp.add(statsThree, 1, 3);
+		gp.add(statsFour, 1, 4);
+		gp.add(statsFive, 1, 5);
+		gp.add(startButton, 1, 6);
 		gp.setAlignment(Pos.CENTER);
 		gp.setVgap(5);
 
+		winL.getChildren().add(winLoss);
 		statTitle.getChildren().add(stats);
 		statsTwo.getChildren().add(ss);
 		statsThree.getChildren().add(gm);
 		statsFour.getChildren().add(miss);
 		statsFive.getChildren().add(hits);
+		StackPane.setAlignment(winLoss, Pos.TOP_CENTER);
 		StackPane.setAlignment(stats, Pos.TOP_CENTER);
 		StackPane.setAlignment(ss, Pos.TOP_CENTER);
 		StackPane.setAlignment(gm, Pos.TOP_CENTER);
@@ -605,15 +622,17 @@ public class GUI extends Application {
 		pic2.setFitHeight(80);
 		pic2.setImage(image2);
 		title.add(pic2, 2, 0);
-		title.setAlignment(Pos.CENTER);
-
 		title.add(gO, 1, 0);
+		
+		title.setAlignment(Pos.CENTER);
+		winLoss.setAlignment(Pos.CENTER);
 		gO.getChildren().add(gameOver);
 		gO.setAlignment(gameOver, Pos.CENTER);
 		root.setTop(title);
 		root.setCenter(gp);
 		root.setAlignment(gp, Pos.CENTER);
 		root.setBottom(buttons);
+		buttons.setAlignment(Pos.CENTER);
 		root.setBorder(null);
 		Scene scene = new Scene(root, 400, 300);
 		Stage GameOverStage = new Stage();
