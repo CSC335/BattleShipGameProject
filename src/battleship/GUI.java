@@ -5,10 +5,17 @@ import java.net.URI;
 import java.util.Random;
 import java.util.Scanner;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,6 +42,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GUI extends Application {
 	// need to display both boards the players and the ai board
@@ -66,16 +74,23 @@ public class GUI extends Application {
 	
 	// static TextArea firstBoardArea = new TextArea();
 	// static TextArea secondBoardArea = new TextArea();
+	static int wR, wL;
+	static ImageView[] waterR, waterL;
+	static StackPane firstBoardStack;
+	static StackPane secondBoardStack;
 	static CanvasView firstBoardA = new CanvasView();
 	static CanvasView secondBoardA = new CanvasView();
+	static ExplosionClass expL, expR;
 
 	private static boolean isPlayer1 = true;
 
-	static BorderPane root;
+	static BorderPane root, waterRpane, waterLpane;
 
 	private static Stage primaryStage;
 	private static MediaPlayer songPlayer;
 	private static MediaPlayer effectsPlayer;
+	
+	public	static Timeline timelineR, timelineL;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -181,14 +196,38 @@ public class GUI extends Application {
 		// Create HBox for left and right labels
 		HBox labelBox = new HBox(300, leftLabel, rightLabel);
 		labelBox.setAlignment(Pos.CENTER);
+		//make the stackPanes:
+		firstBoardStack = new StackPane();
+		waterRpane = new BorderPane();
+		Canvas expRC = new Canvas(360, 360);
+		GraphicsContext gr = expRC.getGraphicsContext2D();
+		expR = new ExplosionClass(gr);
+		firstBoardStack.getChildren().addAll(waterRpane, secondBoardA, expRC);
+		water();
+		
+		secondBoardStack = new StackPane();
+		waterLpane = new BorderPane();
+		Canvas expLC = new Canvas(360, 360);
+		GraphicsContext gL = expRC.getGraphicsContext2D();
+		expR = new ExplosionClass(gL);
+		secondBoardStack.getChildren().addAll(waterLpane, firstBoardA, expLC);
+		waterL();
 
 		// Create a BorderPane to hold all elements
 		root = new BorderPane();
 		root.setPadding(new Insets(40));
 		root.setTop(labelBox);
-		root.setLeft(firstBoardA);
+		root.setRight(firstBoardStack);
 		firstBoardA.setPlayer(false);
-		root.setRight(secondBoardA);
+		root.setLeft(secondBoardStack);
+
+		// Create a BorderPane to hold all elements
+//		root = new BorderPane();
+//		root.setPadding(new Insets(40));
+//		root.setTop(labelBox);
+//		root.setLeft(firstBoardA);
+//		firstBoardA.setPlayer(false);
+//		root.setRight(secondBoardA);
 
 		// set input grid in add ships mode
 		setShipInputGrid();
@@ -623,6 +662,93 @@ public class GUI extends Application {
 	}
 	// music player functions
 
+	public static void makeWater() {
+		Image image = new Image("File:images/water1.png");
+		ImageView pic = new ImageView();
+		pic.setFitWidth(360);
+		pic.setFitHeight(360);
+		pic.setImage(image);
+		Image image2 = new Image("File:images/water2.png");
+		ImageView pic2 = new ImageView();
+		pic2.setFitWidth(360);
+		pic2.setFitHeight(360);
+		pic2.setImage(image2);
+		Image image3 = new Image("File:images/water3.png");
+		ImageView pic3 = new ImageView();
+		pic3.setFitWidth(360);
+		pic3.setFitHeight(360);
+		pic3.setImage(image3);
+		Image imageL = new Image("File:images/water1.png");
+		ImageView picL = new ImageView();
+		picL.setFitWidth(360);
+		picL.setFitHeight(360);
+		picL.setImage(imageL);
+		Image image2L = new Image("File:images/water2.png");
+		ImageView pic2L = new ImageView();
+		pic2L.setFitWidth(360);
+		pic2L.setFitHeight(360);
+		pic2L.setImage(image2L);
+		Image image3L = new Image("File:images/water3.png");
+		ImageView pic3L = new ImageView();
+		pic3L.setFitWidth(360);
+		pic3L.setFitHeight(360);
+		pic3L.setImage(image3L);
+		waterR = new ImageView[5];
+		waterR[0] = pic;
+		waterR[1] = pic2;
+		waterR[2] = pic3;
+		waterR[3] = pic2;
+		waterR[4] = pic;
+		waterL = new ImageView[5];
+		waterL[0] = picL;
+		waterL[1] = pic2L;
+		waterL[2] = pic3L;
+		waterL[3] = pic2L;
+		waterL[4] = picL;
+	}
+	
+	public static void water() {
+		makeWater();
+		timelineR = new Timeline(new KeyFrame(Duration.millis(400), new waterR()));
+		timelineR.setCycleCount(Animation.INDEFINITE);
+		timelineR.play();
+	}
+	public static void waterL() {
+		timelineL = new Timeline(new KeyFrame(Duration.millis(400), new waterL()));
+		timelineL.setCycleCount(Animation.INDEFINITE);
+		timelineL.play();
+	}
+	public static class waterL implements EventHandler<ActionEvent> {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			//waterSecond.setCenter(null);
+		   	 if (wL == 4) {
+					 wL = 0;
+				 }
+				 waterLpane.setCenter(waterL[wL]);
+				 wL ++;
+		}
+		 
+	 }
+	
+	 private static class waterR implements EventHandler<ActionEvent> {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				//waterFirst.setCenter(null);
+			   	 if (wR== 4) {
+						 wR = 0;
+					 }
+					 waterRpane.setCenter(waterR[wR]);
+					 wR ++;
+			}
+			 
+		 }
+	
+	
 	public static void main(String[] args) {
 		launch(args);
 	}

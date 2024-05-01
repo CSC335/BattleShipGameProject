@@ -1,11 +1,19 @@
 package battleship;
 import java.util.ArrayList;
 
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class CanvasView extends BorderPane{
 	
@@ -16,6 +24,8 @@ public class CanvasView extends BorderPane{
 	private Image hitImg;
 	private Image missImg;
 	private Image sunkImg;
+	private Image[] water;
+	private AnimateStarterBackground background;
 	//private GUI gui;
 	public int x;
 	public int y;
@@ -38,6 +48,7 @@ public class CanvasView extends BorderPane{
 	}
 	
 	public void updateBoard(Board board) {
+		//background = null;
 		gc.clearRect(0, 0, 360, 360);
 		makeBackground();
 		makeShips(board.placedShips);
@@ -49,14 +60,21 @@ public class CanvasView extends BorderPane{
 	}
 	
 	public void makeBackground() {
-		gc.setFill(Color.DODGERBLUE);
+		gc.setStroke(Color.rgb(11, 89, 138));
 		for(int i = 0; i < 360; i+= 36) {
 			for(int j = 0; j < 360; j+= 36) {
 				gc.strokeRect(i, j, 36, 36);
-				gc.fillRect(i, j, 36, 36);
+				//gc.fillRect(i, j, 36, 36);
 			}
 		}
 		gc.strokeRect(0, 0, 360, 360);
+	}
+	
+	public void makeBackgroundMove() {
+		background = new AnimateStarterBackground();
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(400), background));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
 	}
 	
 	public void makeShips(ArrayList<Ship> ships) {
@@ -120,4 +138,30 @@ public class CanvasView extends BorderPane{
 			}
 		}
 	}
+	
+	 public class AnimateStarterBackground implements EventHandler<ActionEvent> {
+		 public Image[] images;
+		 int i = 0;
+		 
+		 public AnimateStarterBackground() {
+			Image image = new Image("File:Explosion/water1.png", 360, 360, false, false);
+			Image image2 = new Image("File:Explosion/water2.png", 360, 360, false, false);
+			Image image3 = new Image("File:Explosion/water3.png", 360, 360, false, false);
+			images = new Image[4];
+			images[0] = image;
+			images[1] = image2;
+			images[2] = image3;
+			images[3] = image2;
+			i = 0;
+		 }
+			@Override
+			public void handle(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+			   	 if (i == 4) {
+						 i = 0;
+					 }
+			   	 gc.drawImage(images[i], 0, 0);
+				 i ++;
+			}
+		 }
 }
