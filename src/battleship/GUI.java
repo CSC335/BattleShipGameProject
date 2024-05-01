@@ -467,6 +467,8 @@ public class GUI extends Application {
 	}
 	
 	private void playAttack(int xValue, int yValue) {
+		if (game.gameOver())
+			return;
 		// !isPlayer 1 = 2nd board if only AI, might break with 2 player
 				// ExecuteSkillShot uses parameter firstBoard rather than player1
 				if (skillShot0.isSelected()) {
