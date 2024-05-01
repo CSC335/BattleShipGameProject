@@ -366,15 +366,17 @@ public class GUI extends Application {
 		// Create a GridPane to hold the xInput, yInput, and guessButton
 		inputGrid.setHgap(10);
 		inputGrid.setVgap(5);
-		//inputGrid.addRow(0, new Label("X:"), xInput);
-		//inputGrid.addRow(1, new Label("Y:"), yInput);
-		//inputGrid.add(guessButton, 2, 0, 1, 2);
 		
 		
 		skillShot0.setToggleGroup(skillShots);
 		skillShot1.setToggleGroup(skillShots);
 		skillShot2.setToggleGroup(skillShots);
 		skillShot3.setToggleGroup(skillShots);
+		
+		skillShot0.setDisable(false);
+		skillShot1.setDisable(false);
+		skillShot2.setDisable(false);
+		skillShot3.setDisable(false);
 		
 		expLC.setOnMousePressed(event->{
 			int x = (int) event.getX();
