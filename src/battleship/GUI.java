@@ -655,8 +655,9 @@ public class GUI extends Application {
 		root.setBottom(buttons);
 		root.setBorder(null);
 		Scene scene = new Scene(root, 400, 300);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		Stage GameOverStage = new Stage();
+		GameOverStage.setScene(scene);
+		GameOverStage.show();
 	}
 
 	// music player functions
