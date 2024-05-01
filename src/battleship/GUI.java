@@ -92,6 +92,8 @@ public class GUI extends Application {
 	private static MediaPlayer effectsPlayer;
 	
 	public	static Timeline timelineR, timelineL;
+	
+	private static Canvas expLC, expRC;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -200,7 +202,7 @@ public class GUI extends Application {
 		//make the stackPanes:
 		firstBoardStack = new StackPane();
 		waterRpane = new BorderPane();
-		Canvas expRC = new Canvas(360, 360);
+		expRC = new Canvas(360, 360);
 		GraphicsContext gr = expRC.getGraphicsContext2D();
 		expR = new ExplosionClass(gr);
 		firstBoardStack.getChildren().addAll(waterRpane, secondBoardA, expRC);
@@ -208,7 +210,7 @@ public class GUI extends Application {
 		
 		secondBoardStack = new StackPane();
 		waterLpane = new BorderPane();
-		Canvas expLC = new Canvas(360, 360);
+		expLC = new Canvas(360, 360);
 		GraphicsContext gL = expLC.getGraphicsContext2D();
 		expL = new ExplosionClass(gL);
 		secondBoardStack.getChildren().addAll(waterLpane, firstBoardA, expLC);
@@ -221,48 +223,7 @@ public class GUI extends Application {
 		root.setRight(firstBoardStack);
 		firstBoardA.setPlayer(false);
 		root.setLeft(secondBoardStack);
-		expLC.setOnMousePressed(event->{
-			int x = (int) event.getX();
-			int y = (int) event.getY();
-			System.out.print("tried to make move ");
-			System.out.print(x);
-			System.out.print(" ");
-			System.out.println(y);
-			x = x / 36;
-			y = y / 36;
-			System.out.print("tried to make move ");
-			System.out.print(x);
-			System.out.print(" ");
-			System.out.println(y);
-			if(isPlayer1) {
-				int temp = y;
-				y = x;
-				x = temp;
-				game.humanPlayMove(isPlayer1, x, y);
-				printBoards();
-				if (game.gameOver()) {
-					try {
-						startGameOver();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				if (game.isAI) {
-					game.computerPlayMove();
-					printBoards();
-				} else
-					isPlayer1 = !isPlayer1;
-			}
-		});
 		
-		// Create a BorderPane to hold all elements
-//		root = new BorderPane();
-//		root.setPadding(new Insets(40));
-//		root.setTop(labelBox);
-//		root.setLeft(firstBoardA);
-//		firstBoardA.setPlayer(false);
-//		root.setRight(secondBoardA);
-
 		// set input grid in add ships mode
 		setShipInputGrid();
 
@@ -286,9 +247,6 @@ public class GUI extends Application {
 	}
 
 	private static void setShipInputGrid() {
-		// TODO: I'm bad at writing UI :(
-		// TODO: the bad UI code is all in this else statement
-
 		GridPane inputGrid = new GridPane();
 
 		// Create input fields for x and y coordinates
@@ -358,7 +316,23 @@ public class GUI extends Application {
 				e.printStackTrace();
 			}
 		});
-
+		
+		expRC.setOnMousePressed(event->{
+			int x = (int) event.getX();
+			int y = (int) event.getY();
+			System.out.print("tried to make move ");
+			System.out.print(x);
+			System.out.print(" ");
+			System.out.println(y);
+			x = x / 36;
+			y = y / 36;
+			System.out.print("tried to make move ");
+			System.out.print(x);
+			System.out.print(" ");
+			System.out.println(y);
+			xInput.setText(String.valueOf(x));
+			yInput.setText(String.valueOf(y));
+		});
 		// Create a GridPane to hold the xInput, yInput, and guessButton
 		inputGrid.setHgap(10);
 		inputGrid.setVgap(5);
@@ -369,19 +343,6 @@ public class GUI extends Application {
 		inputGrid.add(placeButton, 2, 1, 1, 3);
 		inputGrid.add(randomPlaceButton, 4, 1, 1, 3);
 		inputGrid.add(tutorialButton, 4, 0, 3, 1);
-
-		// ------------------------debug code-----------------------
-		// TODO: delete this when it is no longer necessary
-		Button debugButton = new Button("Debug: end game now");
-		debugButton.setOnAction(event -> {
-			try {
-				startGameOver();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		inputGrid.add(debugButton, 3, 0, 1, 1);
-		// ------------------------debug code-----------------------
 
 		inputGrid.setAlignment(Pos.CENTER);
 
@@ -407,22 +368,9 @@ public class GUI extends Application {
 		// Create a GridPane to hold the xInput, yInput, and guessButton
 		inputGrid.setHgap(10);
 		inputGrid.setVgap(5);
-		inputGrid.addRow(0, new Label("X:"), xInput);
-		inputGrid.addRow(1, new Label("Y:"), yInput);
-		inputGrid.add(guessButton, 2, 0, 1, 2);
-
-		// ------------------------debug code-----------------------
-		// TODO: delete this when it is no longer necessary
-		Button debugButton = new Button("Debug: end game now");
-		debugButton.setOnAction(event -> {
-			try {
-				startGameOver();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		inputGrid.add(debugButton, 3, 0, 1, 1);
-		// ------------------------debug code-----------------------
+		//inputGrid.addRow(0, new Label("X:"), xInput);
+		//inputGrid.addRow(1, new Label("Y:"), yInput);
+		//inputGrid.add(guessButton, 2, 0, 1, 2);
 		
 		
 		skillShot0.setToggleGroup(skillShots);
@@ -430,12 +378,24 @@ public class GUI extends Application {
 		skillShot2.setToggleGroup(skillShots);
 		skillShot3.setToggleGroup(skillShots);
 		
-		//skillShot1
-		//		.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
-		//skillShot2
-		//		.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
-		//skillShot3
-		//		.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: rgb( 0, 0, 102);" + "-fx-font-family: Roboto Slab");
+		expLC.setOnMousePressed(event->{
+			int x = (int) event.getX();
+			int y = (int) event.getY();
+			System.out.print("tried to make move ");
+			System.out.print(x);
+			System.out.print(" ");
+			System.out.println(y);
+			x = x / 36;
+			y = y / 36;
+			System.out.print("tried to make move ");
+			System.out.print(x);
+			System.out.print(" ");
+			System.out.println(y);
+			if(isPlayer1) {
+				// x and y are swapped
+				playAttack(y, x);
+			}
+		});
 		
 		inputGrid.setAlignment(Pos.CENTER);
 		inputGrid.add(skillShot0, 0, 4, 1, 1);
@@ -450,8 +410,8 @@ public class GUI extends Application {
 
 		// Process the guess based on xInput and yInput values
 		try {
-			xValue = Integer.parseInt(xInput.getText());
 			yValue = Integer.parseInt(yInput.getText());
+			xValue = Integer.parseInt(xInput.getText());
 			rotValue = Integer.parseInt(orientation.getText());
 		} catch (Exception e) {
 			// TODO: add alert if we want one, or just keep like this
@@ -476,7 +436,6 @@ public class GUI extends Application {
 		// plays AI move or switches to next player
 		if (game.isAI) {
 			game.computerPlaceShip(true);
-			printBoards();
 		} else
 			isPlayer1 = !isPlayer1;
 		System.out.println(game.nextShip(isPlayer1));
@@ -484,6 +443,8 @@ public class GUI extends Application {
 			setGuessInputGrid();
 		else
 			shipSize.setText("Size:" + game.nextShip(isPlayer1).size());
+		
+		printBoards();
 	}
 
 	
@@ -494,6 +455,58 @@ public class GUI extends Application {
 		// prints each board
 		game.getBoard(true);
 		game.getBoard(false);
+	}
+	
+	private static void playAttack(int xValue, int yValue) {
+		// !isPlayer 1 = 2nd board if only AI, might break with 2 player
+				// ExecuteSkillShot uses parameter firstBoard rather than player1
+				if (skillShot0.isSelected()) {
+					if (!game.ExecuteSkillShot(!isPlayer1, 0, yValue, xValue))
+						return;
+					skillShot0.setSelected(false);
+					skillShot0.setDisable(true);
+				} else if (skillShot1.isSelected()) {
+					if (!game.ExecuteSkillShot(!isPlayer1, 1, yValue, xValue))
+						return;
+					skillShot1.setSelected(false);
+					skillShot1.setDisable(true);
+				} else if (skillShot2.isSelected()) {
+					if (!game.ExecuteSkillShot(!isPlayer1, 2, yValue, xValue))
+						return;
+					skillShot2.setSelected(false);
+					skillShot2.setDisable(true);
+				} else {
+					// does nothing else (may put up alerts tho) if move is invalid
+					if (!game.humanPlayMove(isPlayer1, xValue, yValue)) {
+						return;
+					}
+				}
+				
+
+
+				if (game.gameOver()) {
+					try {
+						startGameOver();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+
+				// plays AI move or switches to next player
+				if (game.isAI) {
+					game.computerPlayMove();
+					printBoards();
+				} else
+					isPlayer1 = !isPlayer1;
+				
+				if (game.gameOver()) {
+					try {
+						startGameOver();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 	}
 
 	
@@ -512,55 +525,18 @@ public class GUI extends Application {
 		// Perform the game logic for the guess
 		System.out.println("Player " + (isPlayer1 ? "1" : "2") + " guess: (" + xValue + ", " + yValue + ")");
 		
+		playAttack(xValue, yValue);
 		
-		// !isPlayer 1 = 2nd board if only AI, might break with 2 player
-		// ExecuteSkillShot uses parameter firstBoard rather than player1
-		if (skillShot0.isSelected()) {
-			if (!game.ExecuteSkillShot(!isPlayer1, 0, xValue, yValue))
-				return;
-			skillShot0.setDisable(true);
-		} else if (skillShot1.isSelected()) {
-			if (!game.ExecuteSkillShot(!isPlayer1, 1, xValue, yValue))
-				return;
-			skillShot1.setDisable(true);
-		} else if (skillShot2.isSelected()) {
-			if (!game.ExecuteSkillShot(!isPlayer1, 2, xValue, yValue))
-				return;
-			skillShot2.setDisable(true);
-		} else {
-			// does nothing else (may put up alerts tho) if move is invalid
-			if (!game.humanPlayMove(isPlayer1, xValue, yValue)) {
-				return;
-			}
-		}
-		
-
-
-		if (game.gameOver()) {
-			try {
-				startGameOver();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 
 		// if game still running update the board
 		printBoards();
 		xInput.clear();
 		yInput.clear();
-
-		// plays AI move or switches to next player
-		if (game.isAI) {
-			game.computerPlayMove();
-			printBoards();
-		} else
-			isPlayer1 = !isPlayer1;
 	}
 
 	// sets the game over screen
 	
 	public static void startGameOver() {
-		Button newGame, end;
 		StackPane gO = new StackPane();
 		StackPane statTitle = new StackPane();
 		StackPane statsTwo = new StackPane();
@@ -579,9 +555,9 @@ public class GUI extends Application {
 		int[] statsP1 = game.getStats(true);
 		int[] statsP2 = game.getStats(false);
 
-		Label stats = new Label("P1       Game Stats      P2");
+		Label stats = new Label("P1       Game Stats      P2");	 
 		Label ss = new Label(String.format("%-10s", statsP1[0]) + "Ships Sunk" + String.format("%10s", statsP2[0]));
-		Label gm = new Label(String.format("%-7s", statsP1[1]) + "Guesses Made" + String.format("%7s", statsP2[1]));
+		Label gm = new Label(String.format("%-7s", statsP1[1]) + "Squares Tried" + String.format("%7s", statsP2[1]));
 		Label miss = new Label(String.format("%-13s", statsP1[2]) + "Misses" + String.format("%14s", statsP2[2]));
 		Label hits = new Label(String.format("%-15s", statsP1[3]) + "Hits" + String.format("%16s", statsP2[3]));
 
@@ -630,21 +606,6 @@ public class GUI extends Application {
 		pic2.setImage(image2);
 		title.add(pic2, 2, 0);
 		title.setAlignment(Pos.CENTER);
-
-		// buttons
-		newGame = new Button("Play Again?");
-		end = new Button("End game.");
-		buttons.add(newGame, 0, 0);
-		buttons.add(end, 1, 0);
-		buttons.setVgap(20);
-		buttons.setHgap(20);
-		buttons.setAlignment(Pos.CENTER);
-		newGame.setOnAction(event -> {
-			// start a new game
-		});
-		end.setOnAction(event -> {
-			// close
-		});
 
 		title.add(gO, 1, 0);
 		gO.getChildren().add(gameOver);
@@ -758,8 +719,6 @@ public class GUI extends Application {
 
 		@Override
 		public void handle(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			//waterSecond.setCenter(null);
 		   	 if (wL == 4) {
 					 wL = 0;
 				 }
@@ -773,8 +732,6 @@ public class GUI extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				//waterFirst.setCenter(null);
 			   	 if (wR== 4) {
 						 wR = 0;
 					 }
@@ -790,48 +747,3 @@ public class GUI extends Application {
 	}
 
 }
-
-// old code:
-
-// top of start game for textarea view
-// 
-//	opponentArea.setAlignment(Pos.CENTER);
-//	firstBoardArea.setEditable(false); // Set to read-only
-//	firstBoardArea.setMaxWidth(360);
-//	firstBoardArea.setMaxHeight(368);
-//	// secondBoardArea.setWrapText(true);
-//	firstBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
-//
-//	secondBoardArea.setEditable(false); // Set to read-only
-//	secondBoardArea.setMaxWidth(360);
-//	secondBoardArea.setMaxHeight(368);
-//	// firstBoardArea.setWrapText(true);
-//	secondBoardArea.setFont(Font.font("Courier New", FontWeight.BOLD, 27));
-
-/*
- * in printBoard /* if (isFirstBoard) {
- * //firstBoardArea.setText(game.getBoard(firstBoard));
- * firstBoardA.updateBoard(game.getActualBoard(isFirstBoard)); } else {
- * //secondBoardArea.setText(game.getBoard(firstBoard));
- * secondBoardA.updateBoard(game.getActualBoard(isFirstBoard)); }
- */
-
-/*
- * playExplosion () String str = "Mp3s/Explosion sound effect.mp3";
- * System.out.println(str); File file = new File(str); URI uri = file.toURI();
- * Media media = new Media(uri.toString()); effectsPlayer = new
- * MediaPlayer(media); // mediaPlayer.setOnEndOfMedia(new Waiter());
- * effectsPlayer.setAutoPlay(true); effectsPlayer.play();
- * 
- * playABoringSong() String str = "Mp3s/tgw.mp3"; System.out.println(str); File
- * file = new File(str); URI uri = file.toURI(); Media media = new
- * Media(uri.toString()); songPlayer = new MediaPlayer(media); //
- * mediaPlayer.setOnEndOfMedia(new Waiter()); songPlayer.setAutoPlay(true);
- * songPlayer.play();
- * 
- * playAFunSong() String str = "Mp3s/tgw.mp3"; System.out.println(str); File
- * file = new File(str); URI uri = file.toURI(); Media media = new
- * Media(uri.toString()); songPlayer = new MediaPlayer(media); //
- * mediaPlayer.setOnEndOfMedia(new Waiter()); songPlayer.setAutoPlay(true);
- * songPlayer.play();
- */

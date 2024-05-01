@@ -30,7 +30,7 @@ public class BattleshipGame {
 		}else if (whichAI == "hard") {
 			// AI on left, player on right
 			player1 = new Player(b, a);
-			strategyAI = new Ai();
+			strategyAI = new HardAI();
 		} else {
 			// player1 on left, player2 on right
 			player1 = new Player(a, b);

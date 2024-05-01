@@ -2,7 +2,7 @@ package battleship;
 
 import java.util.Random;
 
-public class Ai implements BattleShipStrategy {
+public class HardAI implements BattleShipStrategy {
 	// at the beginning the ai can be random
 	private static Random generator = new Random();
 
@@ -28,9 +28,6 @@ public class Ai implements BattleShipStrategy {
 		int x = 0;
 		int y = 0;
 
-		int lastHitX = -1;
-		int lastHitY = -1;
-
 		// Find the last hit that can be expanded upon
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
@@ -43,9 +40,6 @@ public class Ai implements BattleShipStrategy {
 				// check if it is lower case letter which is hit before and it has a near by square can hit
 				if (hitSquare != 'X' && hitSquare != '.' && Character.isLowerCase(hitSquare) 
 						&& (availableSquare[0] != -1 && availableSquare[1] != -1)) {
-					// last hit update
-					lastHitX = i;
-					lastHitY = j;
 					
 					// return next step which can hit another square
 					returned[0] = availableSquare[0];

@@ -77,41 +77,13 @@ public class Player {
 		ship.setOrientation(orientation);
 		// Ex. ShipInfoToArray(5, 5, 2, 3) returns
 		// new int[][] {{5, 5}, {5, 4}, {5, 3}}
-		int[][] shipArr = ShipInfoToArray(x, y, orientation, ship.size());
+		int[][] shipArr = ShipInfoToArray(y, x, orientation, ship.size());
 		
-		for (int[] point : shipArr) {
-			// return false if outside of board bounds.
-			if (point[0] < 0 || point[0] >= BOARD_SIZE || point[1] < 0 || point[1] >= BOARD_SIZE) {
-				System.out.println("Player.ShipAdd() coords out of bounds");
-				// alert ship placement out of bounds
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setHeaderText("Invalid Ship Placement");
-				alert.setContentText("Ship co-ordinates out of bounds");
-				alert.showAndWait();
-				return false;
-			}
-
-			char curSquare = myBoard.getSqState(point[0], point[1], true);
-
-			// return false if any ship square is occupied already
-			if (curSquare != 'X' && curSquare != '.') {
-				// TODO: output exception if necessary
-				// alert ship placement occupied
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setHeaderText("Invalid Ship Placement");
-				alert.setContentText("Ship co-ordinates occupied");
-				alert.showAndWait();
-				return false;
-			}
+		if (myBoard.addShip(shipArr, ship)) {
+			myBoard.shipsPlaced++;
+			return true;
 		}
-
-		ships.add(ship);
-		for (int[] point : shipArr) {
-			myBoard.placeSq(point[0], point[1], ship);
-			System.out.println("adding at (" + point[0] + ", " + point[1] + ")");
-		}
-		myBoard.shipsPlaced++;
-		return true;
+		return false;
 	}
 
 	// returns true and plays move if valid; returns false otherwise
