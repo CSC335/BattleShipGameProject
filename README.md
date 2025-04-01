@@ -1,6 +1,6 @@
 # Battleship Game Project
 The following is a group project by Luckie Musngi, Mel Kinghorn, Carrie, and Alec Schmitt using scrum. 
-Everything was made from the ground up without outside assistance.
+We were given direction in that there were choices of different games we could make, and a rubric.
 
 ## Overview
 This project is an implementation of the classic Battleship game, and is played 
